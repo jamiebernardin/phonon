@@ -1,7 +1,0 @@
-[
-    {
-      model: 'Person',
-      displayField: 'name',
-      searchField: 'name'
-    }
-]

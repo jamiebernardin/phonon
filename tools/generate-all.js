@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
-node generate-component.js $1
-node generate-controller.js $1
-node generate-detail.js $1
+var models = require('../assets/models').models;
+var generators = require('./generators.js');
+
+generators.appModule(models);
+models.forEach(function (model) {
+    console.log(model);
+});
+

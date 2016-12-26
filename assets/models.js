@@ -1,13 +1,13 @@
 module.exports = {
     models: [
         {
-            model: 'Person',
+            name: 'Person',
             displayField: 'name',
             searchField: 'name',
             detailField: ['age']
         },
         {
-            model: 'Place',
+            name: 'Place',
             displayField: 'city',
             searchField: 'state',
             detailFields: ['state', 'zip']

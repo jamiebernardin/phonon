@@ -1,7 +1,7 @@
 System.register(["./property.sheet"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var property_sheet_1, RouteSupport, BaseRowComponent, BaseSearchComponent, BaseDetailComponent;
+    var property_sheet_1, RouteSupport, BaseRowComponent, BaseDetailComponent, BaseSearchComponent;
     return {
         setters: [
             function (property_sheet_1_1) {
@@ -33,44 +33,6 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                 return BaseRowComponent;
             }());
             exports_1("BaseRowComponent", BaseRowComponent);
-            BaseSearchComponent = (function () {
-                function BaseSearchComponent(entityService, router) {
-                    this.searchStr = "";
-                    this.entities = [];
-                    this.router = router;
-                    this.entityService = entityService;
-                }
-                BaseSearchComponent.prototype.getPath = function () {
-                    return null;
-                };
-                BaseSearchComponent.prototype.getDetailRoute = function () {
-                    return null;
-                };
-                BaseSearchComponent.prototype.search = function () {
-                    var that = this;
-                    this.entities = [];
-                    this.entityService.search(this.getPath(), this.searchStr).subscribe(function (entities) { return Array.prototype.push.apply(that.entities, entities); });
-                };
-                BaseSearchComponent.prototype.onSelect = function (entity) {
-                    RouteSupport.get().putParam('entity', entity.getObj());
-                    RouteSupport.get().putParam('searchStr', this.searchStr);
-                    this.router.navigate([this.getDetailRoute()]);
-                };
-                BaseSearchComponent.prototype.create = function () {
-                    RouteSupport.get().putParam('entity', {});
-                    RouteSupport.get().putParam('searchStr', this.searchStr);
-                    RouteSupport.get().putParam('create', 'true');
-                    this.router.navigate([this.getDetailRoute()]);
-                };
-                BaseSearchComponent.prototype.ngOnInit = function () {
-                    this.searchStr = RouteSupport.get().takeParam('searchStr');
-                    if (this.searchStr !== null) {
-                        this.search();
-                    }
-                };
-                return BaseSearchComponent;
-            }());
-            exports_1("BaseSearchComponent", BaseSearchComponent);
             BaseDetailComponent = (function () {
                 function BaseDetailComponent(entityService, router) {
                     this.router = router;
@@ -126,6 +88,44 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                 return BaseDetailComponent;
             }());
             exports_1("BaseDetailComponent", BaseDetailComponent);
+            BaseSearchComponent = (function () {
+                function BaseSearchComponent(entityService, router) {
+                    this.searchStr = "";
+                    this.entities = [];
+                    this.router = router;
+                    this.entityService = entityService;
+                }
+                BaseSearchComponent.prototype.getPath = function () {
+                    return null;
+                };
+                BaseSearchComponent.prototype.getDetailRoute = function () {
+                    return null;
+                };
+                BaseSearchComponent.prototype.search = function () {
+                    var that = this;
+                    this.entities = [];
+                    this.entityService.search(this.getPath(), this.searchStr).subscribe(function (entities) { return Array.prototype.push.apply(that.entities, entities); });
+                };
+                BaseSearchComponent.prototype.onSelect = function (entity) {
+                    RouteSupport.get().putParam('entity', entity.getObj());
+                    RouteSupport.get().putParam('searchStr', this.searchStr);
+                    this.router.navigate([this.getDetailRoute()]);
+                };
+                BaseSearchComponent.prototype.create = function () {
+                    RouteSupport.get().putParam('entity', {});
+                    RouteSupport.get().putParam('searchStr', this.searchStr);
+                    RouteSupport.get().putParam('create', 'true');
+                    this.router.navigate([this.getDetailRoute()]);
+                };
+                BaseSearchComponent.prototype.ngOnInit = function () {
+                    this.searchStr = RouteSupport.get().takeParam('searchStr');
+                    if (this.searchStr !== null) {
+                        this.search();
+                    }
+                };
+                return BaseSearchComponent;
+            }());
+            exports_1("BaseSearchComponent", BaseSearchComponent);
         }
     };
 });

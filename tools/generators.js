@@ -47,7 +47,23 @@ module.exports = {
         require('fs').writeFileSync(outFile, content, 'utf8');
     },
     appModule: function(models) {
-        
+        var compTemplate = './scaffolding/app-template.ts';
+        var content = require('fs').readFileSync(compTemplate, 'utf8');
+        models.forEach(function(model) {
+            var Name = model.name, name = Name.toLowerCase();
+            // imports
+            var searchStr = '//BEGIN_MODEL_IMPORTS';
+            var replaceStr = searchStr + '\nimport {' + Name + 'RowComponent, ' + Name +'DetailComponent, ';
+            replaceStr += Name + 'SearchComponent} from \'./components/' + name +'\'';
+            content = content.replace(searchStr, replaceStr);
+            // routes
+            searchStr = '//BEGIN_ROUTES';
+            replaceStr = searchStr + '\n    {path: \'' + name + '-detail\', component: ' + Name +'DetailComponent},';
+            replaceStr += '\n    {path: \'' + name + '-search\', component: ' + Name +'SearchComponent},';
+            content = content.replace(searchStr, replaceStr);
+        });
+        var outFile = '../assets/ts/appNew.ts';
+        require('fs').writeFileSync(outFile, content, 'utf8');
     },
     appMenu: function(models) {
         
