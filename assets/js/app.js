@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/platform-browser", "@angular/platform-browser-dynamic", "@angular/http", "@angular/forms", "@angular/router", "@angular/common", "rxjs/Rx", "rxjs/add/Observable/empty", "./framework/properties", "./components/login", "./framework/entity.service", "./framework/login.service", "./components/person"], function (exports_1, context_1) {
+System.register(["@angular/core", "@angular/platform-browser", "@angular/platform-browser-dynamic", "@angular/http", "@angular/forms", "@angular/router", "@angular/common", "rxjs/Rx", "rxjs/add/Observable/empty", "./framework/properties", "./components/login", "./framework/entity.service", "./framework/login.service", "./components/place", "./components/person"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -10,7 +10,7 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, platform_browser_1, platform_browser_dynamic_1, http_1, forms_1, router_1, common_1, Rx_1, properties_1, login_1, entity_service_1, login_service_1, person_1, EmptyPanel, routes, AppComponent, PhononModule;
+    var core_1, platform_browser_1, platform_browser_dynamic_1, http_1, forms_1, router_1, common_1, Rx_1, properties_1, login_1, entity_service_1, login_service_1, place_1, person_1, EmptyPanel, routes, AppComponent, PhononModule;
     return {
         setters: [
             function (core_1_1) {
@@ -51,6 +51,9 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
             function (login_service_1_1) {
                 login_service_1 = login_service_1_1;
             },
+            function (place_1_1) {
+                place_1 = place_1_1;
+            },
             function (person_1_1) {
                 person_1 = person_1_1;
             }
@@ -69,8 +72,12 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
             ], EmptyPanel);
             exports_1("EmptyPanel", EmptyPanel);
             routes = [
+                //BEGIN_ROUTES
+                { path: 'place-detail', component: place_1.PlaceDetailComponent },
+                { path: 'place-search', component: place_1.PlaceSearchComponent },
                 { path: 'person-detail', component: person_1.PersonDetailComponent },
                 { path: 'person-search', component: person_1.PersonSearchComponent },
+                //END_ROUTES
                 { path: 'empty', component: EmptyPanel }
             ];
             AppComponent = (function () {
@@ -128,7 +135,12 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
             PhononModule = __decorate([
                 core_1.NgModule({
                     declarations: [
-                        AppComponent, EmptyPanel, properties_1.StringProperty, properties_1.BooleanProperty, properties_1.DateTimeProperty, properties_1.TextProperty, properties_1.IntegerProperty, login_1.LoginComponent
+                        //BEGIN_MODEL_DECS
+                        place_1.PlaceRowComponent, place_1.PlaceDetailComponent, place_1.PlaceSearchComponent,
+                        person_1.PersonRowComponent, person_1.PersonDetailComponent, person_1.PersonSearchComponent,
+                        //END_MODEL_DECS
+                        AppComponent, EmptyPanel, properties_1.StringProperty, properties_1.BooleanProperty,
+                        properties_1.DateTimeProperty, properties_1.TextProperty, properties_1.IntegerProperty, login_1.LoginComponent
                     ],
                     imports: [
                         platform_browser_1.BrowserModule,

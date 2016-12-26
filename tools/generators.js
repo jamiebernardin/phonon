@@ -62,15 +62,25 @@ module.exports = {
             replaceStr += '\n    {path: \'' + name + '-search\', component: ' + Name +'SearchComponent},';
             content = content.replace(searchStr, replaceStr);
             // module declarations
-            searchStr = '//BEGIN_MODEL_COMPONENTS';
-            replaceStr = searchStr + '\nimport {' + Name + 'RowComponent, ' + Name +'DetailComponent, ';
-            replaceStr += Name + 'SearchComponent} from \'./components/' + name +'\'';
+            searchStr = '//BEGIN_MODEL_DECS';
+            replaceStr = searchStr + '\n        ' +Name + 'RowComponent, ' + Name +'DetailComponent, ';
+            replaceStr += Name + 'SearchComponent,';
             content = content.replace(searchStr, replaceStr);
         });
-        var outFile = '../assets/ts/appNew.ts';
+        var outFile = '../assets/ts/app.ts';
         require('fs').writeFileSync(outFile, content, 'utf8');
     },
     appMenu: function(models) {
-        
+        var compTemplate = './scaffolding/app.component-template.html';
+        var content = require('fs').readFileSync(compTemplate, 'utf8');
+        models.forEach(function(model) {
+            var Name = model.name, name = Name.toLowerCase();
+            var searchStr = '        <!--MENU_BEGIN-->';
+            var replaceStr = searchStr + '\n       <a class=\"item\" (click)=\"route(\'';
+            replaceStr += name + '-search\')\">' + Name + '</a>';
+            content = content.replace(searchStr, replaceStr);
+        });
+        var outFile = '../assets/templates/app.component.html';
+        require('fs').writeFileSync(outFile, content, 'utf8');
     }
 }

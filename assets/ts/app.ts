@@ -12,9 +12,10 @@ import {BaseProperty, StringProperty, BooleanProperty, DateTimeProperty, TextPro
 import {LoginComponent} from './components/login'
 import {EntityService} from './framework/entity.service'
 import {LoginService} from './framework/login.service'
-// Model components
-import {PersonDetailComponent, PersonSearchComponent, PersonRowComponent} from './components/person'
-
+//BEGIN_MODEL_IMPORTS
+import {PlaceRowComponent, PlaceDetailComponent, PlaceSearchComponent} from './components/place'
+import {PersonRowComponent, PersonDetailComponent, PersonSearchComponent} from './components/person'
+//END_MODEL_IMPORTS
 
 @Component({
     template: ''
@@ -22,8 +23,12 @@ import {PersonDetailComponent, PersonSearchComponent, PersonRowComponent} from '
 export class EmptyPanel {}
 
 const routes: Routes = [
-    {path: 'person-detail',  component: PersonDetailComponent},
-    {path: 'person-search',  component: PersonSearchComponent},
+    //BEGIN_ROUTES
+    {path: 'place-detail', component: PlaceDetailComponent},
+    {path: 'place-search', component: PlaceSearchComponent},
+    {path: 'person-detail', component: PersonDetailComponent},
+    {path: 'person-search', component: PersonSearchComponent},
+    //END_ROUTES
     {path: 'empty',  component: EmptyPanel}
 ];
 
@@ -43,7 +48,7 @@ export class AppComponent implements OnInit {
                 this.route('person-search');
                 this.error = '';
             },
-            err => {
+                err => {
                 this.route('empty');
                 this.error = 'Invalid email or password.  Please try again.'
             }
@@ -71,8 +76,12 @@ export class AppComponent implements OnInit {
 
 @NgModule({
     declarations: [
-        AppComponent, EmptyPanel, StringProperty, BooleanProperty, DateTimeProperty, TextProperty, IntegerProperty, LoginComponent
-  //      ,PersonDetailComponent, PersonRowComponent, PersonSearchComponent
+        //BEGIN_MODEL_DECS
+        PlaceRowComponent, PlaceDetailComponent, PlaceSearchComponent,
+        PersonRowComponent, PersonDetailComponent, PersonSearchComponent,
+        //END_MODEL_DECS
+        AppComponent, EmptyPanel, StringProperty, BooleanProperty,
+        DateTimeProperty, TextProperty, IntegerProperty, LoginComponent
     ],
     imports: [
         BrowserModule,
