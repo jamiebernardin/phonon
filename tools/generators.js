@@ -61,6 +61,11 @@ module.exports = {
             replaceStr = searchStr + '\n    {path: \'' + name + '-detail\', component: ' + Name +'DetailComponent},';
             replaceStr += '\n    {path: \'' + name + '-search\', component: ' + Name +'SearchComponent},';
             content = content.replace(searchStr, replaceStr);
+            // module declarations
+            searchStr = '//BEGIN_MODEL_COMPONENTS';
+            replaceStr = searchStr + '\nimport {' + Name + 'RowComponent, ' + Name +'DetailComponent, ';
+            replaceStr += Name + 'SearchComponent} from \'./components/' + name +'\'';
+            content = content.replace(searchStr, replaceStr);
         });
         var outFile = '../assets/ts/appNew.ts';
         require('fs').writeFileSync(outFile, content, 'utf8');
