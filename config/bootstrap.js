@@ -36,6 +36,19 @@ module.exports.bootstrap = function(cb) {
         });
       }
   );
+  [
+    { city: 'San Francisco', state: 'CA', zip: 13434},
+    { city: 'New York', state: 'NY', zip: 10026},
+    { city: 'Boston', state: 'MA', zip: 34244}
+  ].forEach(function( place) {
+        Place.create(place).exec(function (err, place){
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('place: ' + place.city + ' created.');
+          }
+        });
+      });
 
 
   // It's very important to trigger this callback method when you are finished

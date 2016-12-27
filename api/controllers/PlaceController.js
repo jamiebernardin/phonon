@@ -13,9 +13,9 @@ module.exports = {
         if (typeof searchStr === 'undefined' || searchStr === '' || searchStr === 'undefined') {
 
         } else {
-            query.where = {SEARCH_FIELD: {contains: searchStr}};
+            query.where = {state: {contains: searchStr}};
         }
-        MODEL_NAME.find(query).exec(function(err, results){
+        Place.find(query).exec(function(err, results){
             return res.json(results);
         });
     }

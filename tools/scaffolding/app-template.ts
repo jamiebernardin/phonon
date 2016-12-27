@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
     login(event) {
         this._loginService.login(event.email, event.password).subscribe(
             () => {
-                this.route('person-search');
+                this.route('FIRST_MODEL-search');
                 this.error = '';
             },
                 err => {
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
     ngOnInit() {
         this._loginService.checkLoggedIn().
-            map(data => this._router.navigate(['person-search'])).catch(err => Observable.empty()).subscribe();
+            map(data => this._router.navigate(['FIRST_MODEL-search'])).catch(err => Observable.empty()).subscribe();
         Observable.timer(this.POLL_INTERVAL, this.POLL_INTERVAL).subscribe(t => {
             this._loginService.checkLoggedIn().catch(err => Observable.empty()).subscribe();
         });

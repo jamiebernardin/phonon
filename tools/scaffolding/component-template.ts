@@ -36,12 +36,12 @@ export class _ComponentName_DetailComponent extends BaseDetailComponent {
     template: `
     <div class="ui large form segment">
       <div class="ui value">
-        {{ entity.getObj()._displayField_ }}
+        {{ entity.getObj().DISPLAY_FIELD }}
       </div>
       <p></p>
       <div class="ui label">
-        Interesting prop
-        <div class="detail">"entity.getObj().some_property"</div>
+        ROW_DETAIL_FIELD
+        <div class="detail">{{entity.getObj().ROW_DETAIL_FIELD}}</div>
       </div>
     </div>
   `

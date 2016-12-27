@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-var models = require('../assets/models').models;
+var models = require('./models').models;
 var generators = require('./generators.js');
 
+
+generators.controller(models);
 generators.appMenu(models);
-models.forEach(function (model) {
-    console.log(model);
-});
+generators.appModule(models);
+generators.controller(models);
+generators.component(models);
+generators.detail(models);
+generators.controllerRoutes(models);
 

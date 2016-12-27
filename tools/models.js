@@ -4,13 +4,13 @@ module.exports = {
             name: 'Person',
             displayField: 'name',
             searchField: 'name',
-            detailField: ['age']
+            rowDetailField: 'age'
         },
         {
             name: 'Place',
             displayField: 'city',
             searchField: 'state',
-            detailFields: ['state', 'zip']
+            rowDetailField: 'state'
         }
     ]
 }
