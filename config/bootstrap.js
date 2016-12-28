@@ -37,16 +37,16 @@ module.exports.bootstrap = function(cb) {
         }
     );
 
-  //['jamie', 'jackie', 'stella'].forEach( function(p) {
-  //      Person.create({name: p, age: Math.random() * 100}).exec(function (err, person) {
-  //        if (err) {
-  //          console.log(err);
-  //        } else {
-  //          console.log('person: ' + person.name + ' created.')
-  //        }
-  //      });
-  //    }
-  //);
+  ['jamie', 'tiger', 'henrick'].forEach( function(p) {
+        Person.create({name: p, age: Math.random() * 100}).exec(function (err, person) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('person: ' + person.name + ' created.')
+          }
+        });
+      }
+  );
   //[
   //  { city: 'San Francisco', state: 'CA', zip: 13434},
   //  { city: 'New York', state: 'NY', zip: 10026},

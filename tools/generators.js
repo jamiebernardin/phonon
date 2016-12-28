@@ -35,14 +35,16 @@ module.exports = {
                         }
                     }
                     content += "   <div class='column'>\n";
-                    content += "       <" + type + "-property>\n";
-                    content += "          [sheet]='sheet'\n";
-                    content += "          [edit]='edit'\n";
+                    content += "       <" + type + "-property\n";
+                    content += "          [sheet]=\"sheet\"\n";
+                    content += "          [edit]=\"edit\"\n";
                     content += "          [field]=\"'" + field + "'\"\n";
-                    content += "          [displayName]=\"'" +  that.displayName(field) + "'\"\n";
+                    content += "          [displayName]=\"'" +  that.displayName(field) + "'\"";
                     if (type === 'select') {
-                        content += "          [itemsUrl]=\"'" + field + "/items'\"\n";
-                        content += "          [selectName]=\"'" + model.displayField + "'\"\n";
+                        content += "\n          [itemsUrl]=\"'" + field + "/items'\"\n";
+                        content += "          [selectName]=\"'" + model.displayField + "'\">\n";
+                    } else {
+                        content += ">\n";
                     }
                     content += '       </' + type + '-property>\n';
                     content += '   </div>\n';
