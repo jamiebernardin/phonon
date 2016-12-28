@@ -13,6 +13,9 @@ import {LoginComponent} from './components/login'
 import {EntityService} from './framework/entity.service'
 import {LoginService} from './framework/login.service'
 //BEGIN_MODEL_IMPORTS
+import {Animal_typeRowComponent, Animal_typeDetailComponent, Animal_typeSearchComponent} from './components/animal_type'
+import {PetRowComponent, PetDetailComponent, PetSearchComponent} from './components/pet'
+import {PersonRowComponent, PersonDetailComponent, PersonSearchComponent} from './components/person'
 //END_MODEL_IMPORTS
 
 @Component({
@@ -22,6 +25,12 @@ export class EmptyPanel {}
 
 const routes: Routes = [
     //BEGIN_ROUTES
+    {path: 'animal_type-detail', component: Animal_typeDetailComponent},
+    {path: 'animal_type-search', component: Animal_typeSearchComponent},
+    {path: 'pet-detail', component: PetDetailComponent},
+    {path: 'pet-search', component: PetSearchComponent},
+    {path: 'person-detail', component: PersonDetailComponent},
+    {path: 'person-search', component: PersonSearchComponent},
     //END_ROUTES
     {path: 'empty',  component: EmptyPanel}
 ];
@@ -71,8 +80,11 @@ export class AppComponent implements OnInit {
 @NgModule({
     declarations: [
         //BEGIN_MODEL_DECS
+        Animal_typeRowComponent, Animal_typeDetailComponent, Animal_typeSearchComponent,
+        PetRowComponent, PetDetailComponent, PetSearchComponent,
+        PersonRowComponent, PersonDetailComponent, PersonSearchComponent,
         //END_MODEL_DECS
-        AppComponent, EmptyPanel, StringProperty, BooleanProperty,
+        AppComponent, EmptyPanel, StringProperty, BooleanProperty, SelectProperty,
         DateTimeProperty, TextProperty, IntegerProperty, LoginComponent
     ],
     imports: [

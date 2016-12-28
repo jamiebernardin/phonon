@@ -15,6 +15,7 @@ module.exports = {
         });
     },
     detail: function(models) {
+        var that = this;
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
             var outFile = '../assets/templates/' + name + '-detail.html';
@@ -22,24 +23,42 @@ module.exports = {
             var utils = require('./scaffolding/utils');
             var menuFile = './scaffolding/detail-menu.html';
             var content = require('fs').readFileSync(menuFile);
-            content = utils.append(content, '<div class="ui three column doubling stackable grid">');
-            var field, displayName, type;
+            content += "<div class='ui three column doubling stackable grid'>\n";
+            var field, displayName, type, schemaModel;
             for (field in apiModel) {
                 if (apiModel.hasOwnProperty(field)) {
                     type = apiModel[field].type;
-                    content = utils.append(content, '   <div class="column">');
-                    content = utils.append(content, utils.beginTag(type));
-                    content = utils.append(content, '          [sheet]="sheet"');
-                    content = utils.append(content, '          [edit]="edit"');
-                    content = utils.append(content, '           [field]="\'' + field + '\'"');
-                    content = utils.append(content, '           [displayName]="\'' + utils.displayName(field) + '\'">');
-                    content = utils.append(content, utils.endTag(type));
-                    content = utils.append(content, '   </div>');
+                    if (typeof type === 'undefined') {
+                        schemaModel = apiModel[field].model;
+                        if (typeof schemaModel !== 'undefined') {
+                            type = 'select';
+                        }
+                    }
+                    content += "   <div class='column'>\n";
+                    content += "       <" + type + "-property>\n";
+                    content += "          [sheet]='sheet'\n";
+                    content += "          [edit]='edit'\n";
+                    content += "          [field]=\"'" + field + "'\"\n";
+                    content += "          [displayName]=\"'" +  that.displayName(field) + "'\"\n";
+                    if (type === 'select') {
+                        content += "          [itemsUrl]=\"'" + field + "/items'\"\n";
+                        content += "          [selectName]=\"'" + model.displayField + "'\"\n";
+                    }
+                    content += '       </' + type + '-property>\n';
+                    content += '   </div>\n';
                 }
             }
-            content = utils.append(content, '</div>');
+            content += '</div>\n';
             require('fs').writeFileSync(outFile, content);
         });
+        //<select-property
+        //    [sheet]="sheet"
+        //    [edit]="edit"
+        //    [field]="'provider_id'"
+        //    [displayName]="'Provider'"
+        //    [itemsUrl]="'provider/items'"
+        //    [selectName]="'provider_name'">
+        //    </select-property>
     },
     controller: function(models) {
         var compTemplate = './scaffolding/controller-template.js';
@@ -48,8 +67,9 @@ module.exports = {
             var outFile = '../api/controllers/'+Name + 'Controller.js';
             var utils = require('./scaffolding/utils');
             var content = require('fs').readFileSync(compTemplate, 'utf8');
-            content = content.replace('MODEL_NAME', Name);
+            content = content.replace(new RegExp('MODEL_NAME', 'g'), Name);
             content = content.replace('SEARCH_FIELD', searchField);
+            content = content.replace('DISPLAY_FIELD', model.displayField);
             require('fs').writeFileSync(outFile, content, 'utf8');
         });
     },
@@ -105,5 +125,13 @@ module.exports = {
         });
         var outFile = '../config/routes.js';
         require('fs').writeFileSync(outFile, content, 'utf8');
-    }
+    },
+    // private
+    displayName  : function (field) {
+        var camel = field.replace(/(\_[a-z])/g, function (item) {
+            return item.toUpperCase().replace('_', ' ');
+        });
+        return camel[0].toUpperCase() + camel.slice(1);
+    },
+
 }

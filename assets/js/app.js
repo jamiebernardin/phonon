@@ -1,4 +1,4 @@
-System.register(["@angular/core", "@angular/platform-browser", "@angular/platform-browser-dynamic", "@angular/http", "@angular/forms", "@angular/router", "@angular/common", "rxjs/Rx", "rxjs/add/Observable/empty", "./framework/properties", "./components/login", "./framework/entity.service", "./framework/login.service"], function (exports_1, context_1) {
+System.register(["@angular/core", "@angular/platform-browser", "@angular/platform-browser-dynamic", "@angular/http", "@angular/forms", "@angular/router", "@angular/common", "rxjs/Rx", "rxjs/add/Observable/empty", "./framework/properties", "./components/login", "./framework/entity.service", "./framework/login.service", "./components/animal_type", "./components/pet", "./components/person"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -10,7 +10,7 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, platform_browser_1, platform_browser_dynamic_1, http_1, forms_1, router_1, common_1, Rx_1, properties_1, login_1, entity_service_1, login_service_1, EmptyPanel, routes, AppComponent, PhononModule;
+    var core_1, platform_browser_1, platform_browser_dynamic_1, http_1, forms_1, router_1, common_1, Rx_1, properties_1, login_1, entity_service_1, login_service_1, animal_type_1, pet_1, person_1, EmptyPanel, routes, AppComponent, PhononModule;
     return {
         setters: [
             function (core_1_1) {
@@ -50,6 +50,15 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
             },
             function (login_service_1_1) {
                 login_service_1 = login_service_1_1;
+            },
+            function (animal_type_1_1) {
+                animal_type_1 = animal_type_1_1;
+            },
+            function (pet_1_1) {
+                pet_1 = pet_1_1;
+            },
+            function (person_1_1) {
+                person_1 = person_1_1;
             }
         ],
         execute: function () {
@@ -67,6 +76,12 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
             exports_1("EmptyPanel", EmptyPanel);
             routes = [
                 //BEGIN_ROUTES
+                { path: 'animal_type-detail', component: animal_type_1.Animal_typeDetailComponent },
+                { path: 'animal_type-search', component: animal_type_1.Animal_typeSearchComponent },
+                { path: 'pet-detail', component: pet_1.PetDetailComponent },
+                { path: 'pet-search', component: pet_1.PetSearchComponent },
+                { path: 'person-detail', component: person_1.PersonDetailComponent },
+                { path: 'person-search', component: person_1.PersonSearchComponent },
                 //END_ROUTES
                 { path: 'empty', component: EmptyPanel }
             ];
@@ -126,8 +141,11 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
                 core_1.NgModule({
                     declarations: [
                         //BEGIN_MODEL_DECS
+                        animal_type_1.Animal_typeRowComponent, animal_type_1.Animal_typeDetailComponent, animal_type_1.Animal_typeSearchComponent,
+                        pet_1.PetRowComponent, pet_1.PetDetailComponent, pet_1.PetSearchComponent,
+                        person_1.PersonRowComponent, person_1.PersonDetailComponent, person_1.PersonSearchComponent,
                         //END_MODEL_DECS
-                        AppComponent, EmptyPanel, properties_1.StringProperty, properties_1.BooleanProperty,
+                        AppComponent, EmptyPanel, properties_1.StringProperty, properties_1.BooleanProperty, properties_1.SelectProperty,
                         properties_1.DateTimeProperty, properties_1.TextProperty, properties_1.IntegerProperty, login_1.LoginComponent
                     ],
                     imports: [

@@ -7,6 +7,7 @@
 
 
 module.exports = {
+    items: require('./utils/queryTool').selectQuery('Person'.toLowerCase(), 'name'),
     get: function (req, res) {
         var searchStr  = req.query.searchStr;
         var query = {limit:20};

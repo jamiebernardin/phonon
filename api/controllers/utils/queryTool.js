@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-    selectFunc: function (table, displayField) {
+    selectQuery: function (table, displayField) {
         return function (req, res) {
             var query = 'select id, ' + displayField + ' from ' + table + ' order by ' + displayField;
             App_user.query(query, function (err, results) {

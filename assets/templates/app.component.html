@@ -6,6 +6,9 @@
             <h2 class="ui item large teal label"><i>phonon</i></h2>
         </a>
         <!--MENU_BEGIN-->
+       <a class="item" (click)="route('person-search')">Person</a>
+       <a class="item" (click)="route('pet-search')">Pet</a>
+       <a class="item" (click)="route('animal_type-search')">Animal_type</a>
         <!--MENU_END-->
         <div class="right menu">
             <a *ngIf="_loginService.isLoggedIn" class="ui item" (click)="logout()">
