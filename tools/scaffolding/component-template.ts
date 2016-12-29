@@ -39,12 +39,7 @@ export class _ComponentName_DetailComponent extends BaseDetailComponent {
         {{ entity.getObj().DISPLAY_FIELD }}
       </div>
       <p></p>
-      <div class="ui label">
-        ROW_DETAIL_FIELD
-        <div class="detail">{{entity.getObj().ROW_DETAIL_FIELD}}</div>
-      </div>
-    </div>
-  `
+ROW_DETAIL    </div>`
 })
 export class _ComponentName_RowComponent extends BaseRowComponent { }
 

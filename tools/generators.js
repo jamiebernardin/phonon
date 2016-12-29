@@ -1,6 +1,7 @@
 
 module.exports = {
     component: function(models) {
+        var that = this;
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
             var outFile = '../assets/ts/components/' + name + '.ts';
@@ -9,7 +10,7 @@ module.exports = {
             var content = require('fs').readFileSync(compTemplate, 'utf8');
             content = content.replace(new RegExp('_ComponentName_', 'g'), Name);
             content = content.replace(new RegExp('_componentName_', 'g'), name);
-            content = content.replace(new RegExp('ROW_DETAIL_FIELD', 'g'), model.rowDetailField);
+            content = content.replace(new RegExp('ROW_DETAIL', 'g'), that.generateDetail(model.rowDetailFields));
             content = content.replace('DISPLAY_FIELD', model.displayField);
             require('fs').writeFileSync(outFile, content, 'utf8');
         });
@@ -53,14 +54,6 @@ module.exports = {
             content += '</div>\n';
             require('fs').writeFileSync(outFile, content);
         });
-        //<select-property
-        //    [sheet]="sheet"
-        //    [edit]="edit"
-        //    [field]="'provider_id'"
-        //    [displayName]="'Provider'"
-        //    [itemsUrl]="'provider/items'"
-        //    [selectName]="'provider_name'">
-        //    </select-property>
     },
     controller: function(models) {
         var compTemplate = './scaffolding/controller-template.js';
@@ -135,5 +128,16 @@ module.exports = {
         });
         return camel[0].toUpperCase() + camel.slice(1);
     },
-
+    generateDetail : function (fields) {
+        var content = '';
+        var that = this;
+        fields.forEach(function (field) {
+            content += '      <div class=\"ui label\">\n';
+            content += '        ' + that.displayName(field) + ': \n';
+            content += '        <div class="detail">';
+            content +=          '{{entity.getObj().' + field + '}}</div>\n';
+            content += '      </div>\n';
+        });
+        return content;
+    }
 }

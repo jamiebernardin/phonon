@@ -67,7 +67,7 @@ System.register(["@angular/core", "../framework/base.components", "../framework/
                     host: {
                         class: 'row'
                     },
-                    template: "\n    <div class=\"ui large form segment\">\n      <div class=\"ui value\">\n        {{ entity.getObj().name }}\n      </div>\n      <p></p>\n      <div class=\"ui label\">\n        age\n        <div class=\"detail\">{{entity.getObj().age}}</div>\n      </div>\n    </div>\n  "
+                    template: "\n    <div class=\"ui large form segment\">\n      <div class=\"ui value\">\n        {{ entity.getObj().name }}\n      </div>\n      <p></p>\n      <div class=\"ui label\">\n        Age: \n        <div class=\"detail\">{{entity.getObj().age}}</div>\n      </div>\n      <div class=\"ui label\">\n        Handicap: \n        <div class=\"detail\">{{entity.getObj().handicap}}</div>\n      </div>\n    </div>"
                 }),
                 __metadata("design:paramtypes", [])
             ], PersonRowComponent);

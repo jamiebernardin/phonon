@@ -2,7 +2,7 @@
  * Created by jbernardin on 4/14/16.
  */
 import {PropertySheet} from './property.sheet'
-import {ElementRef, Component, OnInit, Input, Output, EventEmitter} from '@angular/core'
+import {ElementRef, Component, OnInit, Input, Output, EventEmitter, OnChanges} from '@angular/core'
 import {EntityService} from './entity.service'
 
 declare var jQuery: any;
@@ -145,7 +145,7 @@ export class DateTimeProperty extends BaseProperty<String>  {
 
   `
 })
-export class SelectProperty extends BaseProperty<Number> implements OnInit {
+export class SelectProperty extends BaseProperty<Number> implements OnInit, OnChanges {
     items: any = [];
     itemsUrl: string;
     selectName: string;
@@ -165,16 +165,23 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit {
         this.newValue = id;
         this.selectEmitter.emit({selectId:id});
     }
+
+    ngOnChanges() {
+        setTimeout(() => {
+            jQuery('.ui.dropdown').dropdown();
+        }, 10);
+    }
     ngOnInit() {
         super.ngOnInit();
         let that = this;
         this._entityService.getUrl(this.itemsUrl).subscribe(
-            items =>  Array.prototype.push.apply(that.items, items)
+            items =>  {
+                Array.prototype.push.apply(that.items, items);
+                if (typeof items[0] !== 'undefined') {
+                    that.onSelect(items[0].id);
+                }
+            }
         );
-        jQuery(this.elementRef.nativeElement).dropdown();
-        setTimeout(() => {
-            jQuery('.ui.dropdown').dropdown();
-        }, 1000);
     }
 }
 
@@ -228,9 +235,8 @@ export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
     ngOnInit() {
         super.ngOnInit();
         this.updateSelectValue(this.sheet.getValue(this.selectId));
-        jQuery(this.elementRef.nativeElement).dropdown()
         setTimeout(() => {
             jQuery('.ui.dropdown').dropdown();
-        }, 1000);
+        }, 10);
     }
 }

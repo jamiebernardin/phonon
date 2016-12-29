@@ -62,6 +62,8 @@ export class AppComponent implements OnInit {
         this.route('Empty');
     }
     route(name: string) {
+        console.log('calling route:' + name);
+        console.log('is logged in...' + this._loginService.isLoggedIn);
         if (this._loginService.isLoggedIn) {
             this._router.navigate([name]);
         } else {

@@ -38,7 +38,7 @@ module.exports.bootstrap = function(cb) {
     );
 
   ['jamie', 'tiger', 'henrick'].forEach( function(p) {
-        Person.create({name: p, age: Math.random() * 100}).exec(function (err, person) {
+        Person.create({name: p, age: Math.random() * 100, handicap: Math.random() * 100}).exec(function (err, person) {
           if (err) {
             console.log(err);
           } else {

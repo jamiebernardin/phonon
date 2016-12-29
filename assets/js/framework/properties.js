@@ -159,14 +159,20 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                     this.newValue = id;
                     this.selectEmitter.emit({ selectId: id });
                 };
+                SelectProperty.prototype.ngOnChanges = function () {
+                    setTimeout(function () {
+                        jQuery('.ui.dropdown').dropdown();
+                    }, 10);
+                };
                 SelectProperty.prototype.ngOnInit = function () {
                     _super.prototype.ngOnInit.call(this);
                     var that = this;
-                    this._entityService.getUrl(this.itemsUrl).subscribe(function (items) { return Array.prototype.push.apply(that.items, items); });
-                    jQuery(this.elementRef.nativeElement).dropdown();
-                    setTimeout(function () {
-                        jQuery('.ui.dropdown').dropdown();
-                    }, 1000);
+                    this._entityService.getUrl(this.itemsUrl).subscribe(function (items) {
+                        Array.prototype.push.apply(that.items, items);
+                        if (typeof items[0] !== 'undefined') {
+                            that.onSelect(items[0].id);
+                        }
+                    });
                 };
                 return SelectProperty;
             }(BaseProperty));
@@ -213,10 +219,9 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 SubSelectProperty.prototype.ngOnInit = function () {
                     _super.prototype.ngOnInit.call(this);
                     this.updateSelectValue(this.sheet.getValue(this.selectId));
-                    jQuery(this.elementRef.nativeElement).dropdown();
                     setTimeout(function () {
                         jQuery('.ui.dropdown').dropdown();
-                    }, 1000);
+                    }, 10);
                 };
                 return SubSelectProperty;
             }(BaseProperty));

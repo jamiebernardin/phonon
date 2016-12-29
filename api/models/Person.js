@@ -9,6 +9,9 @@ module.exports = {
         },
         age: {
             type: 'integer'
+        },
+        handicap: {
+            type: 'integer'
         }
     }
 };
