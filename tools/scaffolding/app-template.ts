@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
     declarations: [
         //BEGIN_MODEL_DECS
         //END_MODEL_DECS
-        AppComponent, EmptyPanel, StringProperty, BooleanProperty,
+        AppComponent, EmptyPanel, StringProperty, BooleanProperty, SelectProperty,
         DateTimeProperty, TextProperty, IntegerProperty, LoginComponent
     ],
     imports: [

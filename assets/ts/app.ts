@@ -84,8 +84,8 @@ export class AppComponent implements OnInit {
         PetRowComponent, PetDetailComponent, PetSearchComponent,
         PersonRowComponent, PersonDetailComponent, PersonSearchComponent,
         //END_MODEL_DECS
-        AppComponent, EmptyPanel, StringProperty, BooleanProperty,
-        DateTimeProperty, TextProperty, IntegerProperty, SelectProperty, LoginComponent
+        AppComponent, EmptyPanel, StringProperty, BooleanProperty, SelectProperty,
+        DateTimeProperty, TextProperty, IntegerProperty, LoginComponent
     ],
     imports: [
         BrowserModule,
