@@ -178,7 +178,7 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 core_1.Component({
                     selector: 'select-property',
                     inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName'],
-                    template: "\n       <h4 class=\"ui top attached header\">\n           {{ displayName }}\n      </h4>\n       <div *ngIf=\"!edit\" class=\"ui attached segment\">\n           {{ getDisplayItem() }}\n       </div>\n        <div *ngIf=\"edit\" class=\"ui attached segment\">\n        <select class=\"ui fluid search selection dropdown\"  (change)=\"onSelect($event.target.value)\">\n            <option *ngFor=\"let item of items\" [selected]=\"item.id === sheet.getValue(field)\" [value] = \"item.id\">{{item[selectName]}}</option>\n        </select>\n        </div>\n\n  "
+                    template: "\n       <h4 class=\"ui top attached header\">\n           {{ displayName }}\n      </h4>\n       <div *ngIf=\"!edit\" class=\"ui attached segment\">\n           {{ getDisplayItem() }}\n       </div>\n        <div *ngIf=\"edit\" class=\"ui attached segment\">\n        <select class=\"ui search selection dropdown\"  (change)=\"onSelect($event.target.value)\">\n            <option *ngFor=\"let item of items\" [selected]=\"item.id === sheet.getValue(field)\" [value] = \"item.id\">{{item[selectName]}}</option>\n        </select>\n        </div>\n\n  "
                 }),
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], SelectProperty);

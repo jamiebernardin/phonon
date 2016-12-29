@@ -70,6 +70,7 @@ export class BaseDetailComponent implements OnInit, EntityPath {
                         res => {
                             this.edit = false;
                             this.sheet.setEntity(res.json());
+                            this.create = false;
                     })
             }
             else {
@@ -115,7 +116,7 @@ export class BaseSearchComponent implements OnInit, EntityPath {
     create() {
         RouteSupport.get().putParam('entity', {});
         RouteSupport.get().putParam('searchStr', this.searchStr);
-        RouteSupport.get().putParam('create', 'true');
+        RouteSupport.get().putParam('create', true);
         this.router.navigate( [this.getDetailRoute() ] );
     }
     ngOnInit() {

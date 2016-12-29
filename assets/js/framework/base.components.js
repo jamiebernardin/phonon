@@ -72,6 +72,7 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                             this.entityService.create(this.getPath(), changes).subscribe(function (res) {
                                 _this.edit = false;
                                 _this.sheet.setEntity(res.json());
+                                _this.create = false;
                             });
                         }
                         else {
@@ -114,7 +115,7 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                 BaseSearchComponent.prototype.create = function () {
                     RouteSupport.get().putParam('entity', {});
                     RouteSupport.get().putParam('searchStr', this.searchStr);
-                    RouteSupport.get().putParam('create', 'true');
+                    RouteSupport.get().putParam('create', true);
                     this.router.navigate([this.getDetailRoute()]);
                 };
                 BaseSearchComponent.prototype.ngOnInit = function () {
