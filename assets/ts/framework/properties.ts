@@ -138,7 +138,7 @@ export class DateTimeProperty extends BaseProperty<String>  {
            {{ getDisplayItem() }}
        </div>
         <div *ngIf="edit" class="ui attached segment">
-        <select class="ui search selection dropdown"  (change)="onSelect($event.target.value)">
+        <select class="ui fluid dropdown"  (change)="onSelect($event.target.value)">
             <option *ngFor="let item of items" [selected]="item.id === sheet.getValue(field)" [value] = "item.id">{{item[selectName]}}</option>
         </select>
         </div>
