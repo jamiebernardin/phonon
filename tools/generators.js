@@ -63,7 +63,6 @@ module.exports = {
                          '<label>' + collection + '</label>';
                         content += '<div class=\"ui container segment \">';
                         content += '<h4 class=\"ui header\">' + collection + '</h4>';
-                        content += '<div class=\'ui four column doubling stackable grid\'>\n'
                         content += "   <div class='column'>\n";
                         content += "       <collection-property\n";
                         content += "          [sheet]=\"sheet\"\n";
@@ -71,7 +70,6 @@ module.exports = {
                         content += "          [field]=\"'" + collection + "'\">\n";
                         content += '       </collection-property>\n';
                         content += '   </div>\n';
-                        content += '</div>';
                 })
             }
             require('fs').writeFileSync(outFile, content);

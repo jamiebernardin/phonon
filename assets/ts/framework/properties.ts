@@ -8,8 +8,6 @@ import {EntityService} from './entity.service'
 declare var jQuery: any;
 
 
-
-
 export class BaseProperty<T>  {
     newValue: T;
     displayName: string;
@@ -207,53 +205,15 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
 
   `
 })
-export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
-    items: any = [];
-    itemsUrl: string;
-    selectName: string;
-    selectId: string;
-    constructor(private elementRef: ElementRef, private _entityService: EntityService) {
-        super();
-        this.defaultValue = 1;
-    }
-    getDisplayItem() {
-        var id = this.sheet.getValue(this.field);
-        let result = this.items.filter(item => {
-            return item.id === id
-        });
-        return (result.length > 0) ? result[0][this.selectName] : '';
-    }
-    onSelect(id: Number) {
-        this.newValue = id;
-    }
-    updateSelectValue(id: number) {
-        let that = this;
-        while(this.items.length > 0) {
-            this.items.pop();
-        }
-        this._entityService.getUrl(this.itemsUrl+'?selectId='+id).subscribe(
-                items =>  Array.prototype.push.apply(that.items, items)
-        );
-    }
-    ngOnInit() {
-        super.ngOnInit();
-        this.updateSelectValue(this.sheet.getValue(this.selectId));
-        setTimeout(() => {
-            jQuery('.ui.dropdown').dropdown();
-        }, 10);
-    }
-}
 
 @Component({
     selector: 'collection-property',
     inputs: ['field', 'displayName', 'sheet', 'edit'],
     template: `
-       <div *ngIf="!edit" class="ui attached segment">
-      <button
+      <button [disabled]="!edit" class="medium ui basic button"
         *ngFor="let item of sheet.getValue(field)"
         (click)="onSelect(item)">{{item.name}}
-      </button> }}
-      </div>
+      </button>
   `
 })
 export class CollectionProperty extends BaseProperty<String>  {
@@ -264,5 +224,42 @@ export class CollectionProperty extends BaseProperty<String>  {
         console.log(item);
     }
 }
+
+//export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
+//    items: any = [];
+//    itemsUrl: string;
+//    selectName: string;
+//    selectId: string;
+//    constructor(private elementRef: ElementRef, private _entityService: EntityService) {
+//        super();
+//        this.defaultValue = 1;
+//    }
+//    getDisplayItem() {
+//        var id = this.sheet.getValue(this.field);
+//        let result = this.items.filter(item => {
+//            return item.id === id
+//        });
+//        return (result.length > 0) ? result[0][this.selectName] : '';
+//    }
+//    onSelect(id: Number) {
+//        this.newValue = id;
+//    }
+//    updateSelectValue(id: number) {
+//        let that = this;
+//        while(this.items.length > 0) {
+//            this.items.pop();
+//        }
+//        this._entityService.getUrl(this.itemsUrl+'?selectId='+id).subscribe(
+//                items =>  Array.prototype.push.apply(that.items, items)
+//        );
+//    }
+//    ngOnInit() {
+//        super.ngOnInit();
+//        this.updateSelectValue(this.sheet.getValue(this.selectId));
+//        setTimeout(() => {
+//            jQuery('.ui.dropdown').dropdown();
+//        }, 10);
+//    }
+//}
 
 

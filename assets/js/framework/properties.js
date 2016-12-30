@@ -15,7 +15,7 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, entity_service_1, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, SubSelectProperty, CollectionProperty;
+    var core_1, entity_service_1, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, CollectionProperty;
     return {
         setters: [
             function (core_1_1) {
@@ -189,51 +189,6 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], SelectProperty);
             exports_1("SelectProperty", SelectProperty);
-            SubSelectProperty = (function (_super) {
-                __extends(SubSelectProperty, _super);
-                function SubSelectProperty(elementRef, _entityService) {
-                    var _this = _super.call(this) || this;
-                    _this.elementRef = elementRef;
-                    _this._entityService = _entityService;
-                    _this.items = [];
-                    _this.defaultValue = 1;
-                    return _this;
-                }
-                SubSelectProperty.prototype.getDisplayItem = function () {
-                    var id = this.sheet.getValue(this.field);
-                    var result = this.items.filter(function (item) {
-                        return item.id === id;
-                    });
-                    return (result.length > 0) ? result[0][this.selectName] : '';
-                };
-                SubSelectProperty.prototype.onSelect = function (id) {
-                    this.newValue = id;
-                };
-                SubSelectProperty.prototype.updateSelectValue = function (id) {
-                    var that = this;
-                    while (this.items.length > 0) {
-                        this.items.pop();
-                    }
-                    this._entityService.getUrl(this.itemsUrl + '?selectId=' + id).subscribe(function (items) { return Array.prototype.push.apply(that.items, items); });
-                };
-                SubSelectProperty.prototype.ngOnInit = function () {
-                    _super.prototype.ngOnInit.call(this);
-                    this.updateSelectValue(this.sheet.getValue(this.selectId));
-                    setTimeout(function () {
-                        jQuery('.ui.dropdown').dropdown();
-                    }, 10);
-                };
-                return SubSelectProperty;
-            }(BaseProperty));
-            SubSelectProperty = __decorate([
-                core_1.Component({
-                    selector: 'subselect-property',
-                    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName', 'joinId', 'selectId'],
-                    template: "\n       <h4 class=\"ui top attached header\">\n           {{ displayName }}\n      </h4>\n       <div *ngIf=\"!edit\" class=\"ui attached segment\">\n           {{ getDisplayItem() }}\n       </div>\n        <div *ngIf=\"edit\" class=\"ui attached segment\">\n        <select class=\"ui fluid search selection dropdown\"  (change)=\"onSelect($event.target.value)\">\n            <option *ngFor=\"let item of items\" [selected]=\"item.id === sheet.getValue(field)\" [value] = \"item.id\">{{item[selectName]}}</option>\n        </select>\n        </div>\n\n  "
-                }),
-                __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
-            ], SubSelectProperty);
-            exports_1("SubSelectProperty", SubSelectProperty);
             CollectionProperty = (function (_super) {
                 __extends(CollectionProperty, _super);
                 function CollectionProperty() {
@@ -246,14 +201,91 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
             }(BaseProperty));
             CollectionProperty = __decorate([
                 core_1.Component({
+                    selector: 'subselect-property',
+                    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName', 'joinId', 'selectId'],
+                    template: "\n       <h4 class=\"ui top attached header\">\n           {{ displayName }}\n      </h4>\n       <div *ngIf=\"!edit\" class=\"ui attached segment\">\n           {{ getDisplayItem() }}\n       </div>\n        <div *ngIf=\"edit\" class=\"ui attached segment\">\n        <select class=\"ui fluid search selection dropdown\"  (change)=\"onSelect($event.target.value)\">\n            <option *ngFor=\"let item of items\" [selected]=\"item.id === sheet.getValue(field)\" [value] = \"item.id\">{{item[selectName]}}</option>\n        </select>\n        </div>\n\n  "
+                }),
+                core_1.Component({
                     selector: 'collection-property',
                     inputs: ['field', 'displayName', 'sheet', 'edit'],
-                    template: "\n       <div *ngIf=\"!edit\" class=\"ui attached segment\">\n      <button\n        *ngFor=\"let item of sheet.getValue(field)\"\n        (click)=\"onSelect(item)\">{{item.name}}\n      </button> }}\n      </div>\n  "
+                    template: "\n      <button [disabled]=\"!edit\" class=\"medium ui basic button\"\n        *ngFor=\"let item of sheet.getValue(field)\"\n        (click)=\"onSelect(item)\">{{item.name}}\n      </button>\n  "
                 }),
                 __metadata("design:paramtypes", [])
             ], CollectionProperty);
             exports_1("CollectionProperty", CollectionProperty);
+            //export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
+            //    items: any = [];
+            //    itemsUrl: string;
+            //    selectName: string;
+            //    selectId: string;
+            //    constructor(private elementRef: ElementRef, private _entityService: EntityService) {
+            //        super();
+            //        this.defaultValue = 1;
+            //    }
+            //    getDisplayItem() {
+            //        var id = this.sheet.getValue(this.field);
+            //        let result = this.items.filter(item => {
+            //            return item.id === id
+            //        });
+            //        return (result.length > 0) ? result[0][this.selectName] : '';
+            //    }
+            //    onSelect(id: Number) {
+            //        this.newValue = id;
+            //    }
+            //    updateSelectValue(id: number) {
+            //        let that = this;
+            //        while(this.items.length > 0) {
+            //            this.items.pop();
+            //        }
+            //        this._entityService.getUrl(this.itemsUrl+'?selectId='+id).subscribe(
+            //                items =>  Array.prototype.push.apply(that.items, items)
+            //        );
+            //    }
+            //    ngOnInit() {
+            //        super.ngOnInit();
+            //        this.updateSelectValue(this.sheet.getValue(this.selectId));
+            //        setTimeout(() => {
+            //            jQuery('.ui.dropdown').dropdown();
+            //        }, 10);
+            //    }
+            //}
         }
     };
 });
+//export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
+//    items: any = [];
+//    itemsUrl: string;
+//    selectName: string;
+//    selectId: string;
+//    constructor(private elementRef: ElementRef, private _entityService: EntityService) {
+//        super();
+//        this.defaultValue = 1;
+//    }
+//    getDisplayItem() {
+//        var id = this.sheet.getValue(this.field);
+//        let result = this.items.filter(item => {
+//            return item.id === id
+//        });
+//        return (result.length > 0) ? result[0][this.selectName] : '';
+//    }
+//    onSelect(id: Number) {
+//        this.newValue = id;
+//    }
+//    updateSelectValue(id: number) {
+//        let that = this;
+//        while(this.items.length > 0) {
+//            this.items.pop();
+//        }
+//        this._entityService.getUrl(this.itemsUrl+'?selectId='+id).subscribe(
+//                items =>  Array.prototype.push.apply(that.items, items)
+//        );
+//    }
+//    ngOnInit() {
+//        super.ngOnInit();
+//        this.updateSelectValue(this.sheet.getValue(this.selectId));
+//        setTimeout(() => {
+//            jQuery('.ui.dropdown').dropdown();
+//        }, 10);
+//    }
+//}
 //# sourceMappingURL=properties.js.map
