@@ -148,7 +148,7 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
                         person_1.PersonRowComponent, person_1.PersonDetailComponent, person_1.PersonSearchComponent,
                         //END_MODEL_DECS
                         AppComponent, EmptyPanel, properties_1.StringProperty, properties_1.BooleanProperty, properties_1.SelectProperty,
-                        properties_1.DateTimeProperty, properties_1.TextProperty, properties_1.IntegerProperty, login_1.LoginComponent
+                        properties_1.DateTimeProperty, properties_1.TextProperty, properties_1.IntegerProperty, login_1.LoginComponent, properties_1.CollectionProperty
                     ],
                     imports: [
                         platform_browser_1.BrowserModule,

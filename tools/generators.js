@@ -21,6 +21,7 @@ module.exports = {
             var Name = model.name, name = Name.toLowerCase();
             var outFile = '../assets/templates/' + name + '-detail.html';
             var apiModel = require('../api/models/' + Name).attributes;
+            var collections = [];
             var utils = require('./scaffolding/utils');
             var menuFile = './scaffolding/detail-menu.html';
             var content = require('fs').readFileSync(menuFile);
@@ -28,30 +29,51 @@ module.exports = {
             var field, displayName, type, schemaModel;
             for (field in apiModel) {
                 if (apiModel.hasOwnProperty(field)) {
-                    type = apiModel[field].type;
-                    if (typeof type === 'undefined') {
-                        schemaModel = apiModel[field].model;
-                        if (typeof schemaModel !== 'undefined') {
-                            type = 'select';
-                        }
-                    }
-                    content += "   <div class='column'>\n";
-                    content += "       <" + type + "-property\n";
-                    content += "          [sheet]=\"sheet\"\n";
-                    content += "          [edit]=\"edit\"\n";
-                    content += "          [field]=\"'" + field + "'\"\n";
-                    content += "          [displayName]=\"'" +  that.displayName(field) + "'\"";
-                    if (type === 'select') {
-                        content += "\n          [itemsUrl]=\"'" + field + "/items'\"\n";
-                        content += "          [selectName]=\"'" + model.displayField + "'\">\n";
+                    if (typeof apiModel[field].collection !== 'undefined') {
+                        collections.push(field);
                     } else {
-                        content += ">\n";
+                        type = apiModel[field].type;
+                        if (typeof type === 'undefined') {
+                            schemaModel = apiModel[field].model;
+                            if (typeof schemaModel !== 'undefined') {
+                                type = 'select';
+                            }
+                        }
+                        content += "   <div class='column'>\n";
+                        content += "       <" + type + "-property\n";
+                        content += "          [sheet]=\"sheet\"\n";
+                        content += "          [edit]=\"edit\"\n";
+                        content += "          [field]=\"'" + field + "'\"\n";
+                        content += "          [displayName]=\"'" + that.displayName(field) + "'\"";
+                        if (type === 'select') {
+                            content += "\n          [itemsUrl]=\"'" + schemaModel + "/items'\"\n";
+                            content += "          [selectName]=\"'" + model.displayField + "'\">\n";
+                        } else {
+                            content += ">\n";
+                        }
+                        content += '       </' + type + '-property>\n';
+                        content += '   </div>\n';
                     }
-                    content += '       </' + type + '-property>\n';
-                    content += '   </div>\n';
                 }
             }
             content += '</div>\n';
+            if (collections) {
+                    collections.forEach(function (collection) {
+                        console.log(collection);
+                         '<label>' + collection + '</label>';
+                        content += '<div class=\"ui container segment \">';
+                        content += '<h4 class=\"ui header\">' + collection + '</h4>';
+                        content += '<div class=\'ui four column doubling stackable grid\'>\n'
+                        content += "   <div class='column'>\n";
+                        content += "       <collection-property\n";
+                        content += "          [sheet]=\"sheet\"\n";
+                        content += "          [edit]=\"edit\"\n";
+                        content += "          [field]=\"'" + collection + "'\">\n";
+                        content += '       </collection-property>\n';
+                        content += '   </div>\n';
+                        content += '</div>';
+                })
+            }
             require('fs').writeFileSync(outFile, content);
         });
     },
@@ -65,6 +87,15 @@ module.exports = {
             content = content.replace(new RegExp('MODEL_NAME', 'g'), Name);
             content = content.replace('SEARCH_FIELD', searchField);
             content = content.replace('DISPLAY_FIELD', model.displayField);
+            var collections = model.collections;
+            var colStr = '';
+            if (typeof collections !== 'undefined') {
+                colStr = '.'
+                collections.forEach(function(collection) {
+                   colStr += 'populate(\'' + collection + '\')'
+                });
+            }
+            content = content.replace('POPULATE_COLLECTIONS', colStr);
             require('fs').writeFileSync(outFile, content, 'utf8');
         });
     },

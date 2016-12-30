@@ -4,7 +4,8 @@ module.exports = {
             name: 'Person',
             displayField: 'name',
             searchField: 'name',
-            rowDetailFields: ['age', 'handicap']
+            rowDetailFields: ['age', 'handicap'],
+            collections: ['pets']
         },
         {
             name: 'Pet',

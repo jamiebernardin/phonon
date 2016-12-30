@@ -15,7 +15,7 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, entity_service_1, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, SubSelectProperty;
+    var core_1, entity_service_1, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, SubSelectProperty, CollectionProperty;
     return {
         setters: [
             function (core_1_1) {
@@ -234,6 +234,25 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], SubSelectProperty);
             exports_1("SubSelectProperty", SubSelectProperty);
+            CollectionProperty = (function (_super) {
+                __extends(CollectionProperty, _super);
+                function CollectionProperty() {
+                    return _super.call(this) || this;
+                }
+                CollectionProperty.prototype.onSelect = function (item) {
+                    console.log(item);
+                };
+                return CollectionProperty;
+            }(BaseProperty));
+            CollectionProperty = __decorate([
+                core_1.Component({
+                    selector: 'collection-property',
+                    inputs: ['field', 'displayName', 'sheet', 'edit'],
+                    template: "\n       <div *ngIf=\"!edit\" class=\"ui attached segment\">\n      <button\n        *ngFor=\"let item of sheet.getValue(field)\"\n        (click)=\"onSelect(item)\">{{item.name}}\n      </button> }}\n      </div>\n  "
+                }),
+                __metadata("design:paramtypes", [])
+            ], CollectionProperty);
+            exports_1("CollectionProperty", CollectionProperty);
         }
     };
 });

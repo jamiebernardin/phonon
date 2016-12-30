@@ -7,6 +7,9 @@ import {EntityService} from './entity.service'
 
 declare var jQuery: any;
 
+
+
+
 export class BaseProperty<T>  {
     newValue: T;
     displayName: string;
@@ -240,3 +243,26 @@ export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
         }, 10);
     }
 }
+
+@Component({
+    selector: 'collection-property',
+    inputs: ['field', 'displayName', 'sheet', 'edit'],
+    template: `
+       <div *ngIf="!edit" class="ui attached segment">
+      <button
+        *ngFor="let item of sheet.getValue(field)"
+        (click)="onSelect(item)">{{item.name}}
+      </button> }}
+      </div>
+  `
+})
+export class CollectionProperty extends BaseProperty<String>  {
+    constructor() {
+        super();
+    }
+    onSelect(item) {
+        console.log(item);
+    }
+}
+
+

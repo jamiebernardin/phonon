@@ -16,7 +16,7 @@ module.exports = {
         } else {
             query.where = {SEARCH_FIELD: {contains: searchStr}};
         }
-        MODEL_NAME.find(query).exec(function(err, results){
+        MODEL_NAME.find(query)POPULATE_COLLECTIONS.exec(function(err, results){
             return res.json(results);
         });
     }

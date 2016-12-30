@@ -8,7 +8,7 @@ import {Location, LocationStrategy, HashLocationStrategy, APP_BASE_HREF} from '@
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/Observable/empty';
 import {BaseProperty, StringProperty, BooleanProperty, DateTimeProperty, TextProperty,
-    IntegerProperty, SelectProperty, SubSelectProperty}  from './framework/properties'
+    IntegerProperty, SelectProperty, SubSelectProperty, CollectionProperty}  from './framework/properties'
 import {LoginComponent} from './components/login'
 import {EntityService} from './framework/entity.service'
 import {LoginService} from './framework/login.service'
@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
         //BEGIN_MODEL_DECS
         //END_MODEL_DECS
         AppComponent, EmptyPanel, StringProperty, BooleanProperty, SelectProperty,
-        DateTimeProperty, TextProperty, IntegerProperty, LoginComponent
+        DateTimeProperty, TextProperty, IntegerProperty, LoginComponent, CollectionProperty
     ],
     imports: [
         BrowserModule,

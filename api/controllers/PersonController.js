@@ -16,7 +16,7 @@ module.exports = {
         } else {
             query.where = {name: {contains: searchStr}};
         }
-        Person.find(query).exec(function(err, results){
+        Person.find(query).populate('pets').exec(function(err, results){
             return res.json(results);
         });
     }

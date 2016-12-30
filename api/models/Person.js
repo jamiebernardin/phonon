@@ -12,6 +12,10 @@ module.exports = {
         },
         handicap: {
             type: 'integer'
+        },
+        pets: {
+            collection: 'pet',
+            via: 'owner'
         }
     }
 };

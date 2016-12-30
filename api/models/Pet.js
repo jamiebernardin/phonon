@@ -10,5 +10,8 @@ module.exports = {
         animal_type: {
             model: 'animal_type'
         },
+        owner: {
+            model: 'person'
+        }
     }
 };
