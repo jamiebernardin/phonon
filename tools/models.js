@@ -5,7 +5,7 @@ module.exports = {
             displayField: 'name',
             searchField: 'name',
             rowDetailFields: ['age', 'handicap'],
-            collections: ['pets']
+            collections: ['pets']  // this is to tell the controller to populate collections
         },
         {
             name: 'Pet',

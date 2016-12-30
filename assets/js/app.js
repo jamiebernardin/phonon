@@ -106,8 +106,6 @@ System.register(["@angular/core", "@angular/platform-browser", "@angular/platfor
                     this.route('Empty');
                 };
                 AppComponent.prototype.route = function (name) {
-                    console.log('calling route:' + name);
-                    console.log('is logged in...' + this._loginService.isLoggedIn);
                     if (this._loginService.isLoggedIn) {
                         this._router.navigate([name]);
                     }

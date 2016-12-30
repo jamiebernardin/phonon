@@ -30,7 +30,7 @@ module.exports = {
             for (field in apiModel) {
                 if (apiModel.hasOwnProperty(field)) {
                     if (typeof apiModel[field].collection !== 'undefined') {
-                        collections.push(field);
+                        collections.push({field: field, collection: apiModel[field].collection});
                     } else {
                         type = apiModel[field].type;
                         if (typeof type === 'undefined') {
@@ -58,16 +58,16 @@ module.exports = {
             }
             content += '</div>\n';
             if (collections) {
-                    collections.forEach(function (collection) {
-                        console.log(collection);
-                         '<label>' + collection + '</label>';
-                        content += '<div class=\"ui container segment \">';
-                        content += '<h4 class=\"ui header\">' + collection + '</h4>';
-                        content += "   <div class='column'>\n";
+                    collections.forEach(function (fieldModel) {
+                        content += '<div class=\"ui container segment \">\n';
+                        content += '    <h4 class=\"ui header\">' + fieldModel.field + '</h4>\n';
+                        //content += "   <div class='column'>\n";
                         content += "       <collection-property\n";
                         content += "          [sheet]=\"sheet\"\n";
+                        content += "          (routeItemOutlet)=\"routeToItem($event)\"\n";
                         content += "          [edit]=\"edit\"\n";
-                        content += "          [field]=\"'" + collection + "'\">\n";
+                        content += "          [collection]=\"'" + fieldModel.collection + "'\"\n";
+                        content += "          [field]=\"'" + fieldModel.field + "'\">\n";
                         content += '       </collection-property>\n';
                         content += '   </div>\n';
                 })

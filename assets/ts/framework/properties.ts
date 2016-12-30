@@ -186,29 +186,9 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
     }
 }
 
-
-@Component({
-    selector: 'subselect-property',
-    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName', 'joinId', 'selectId'],
-    template: `
-       <h4 class="ui top attached header">
-           {{ displayName }}
-      </h4>
-       <div *ngIf="!edit" class="ui attached segment">
-           {{ getDisplayItem() }}
-       </div>
-        <div *ngIf="edit" class="ui attached segment">
-        <select class="ui fluid search selection dropdown"  (change)="onSelect($event.target.value)">
-            <option *ngFor="let item of items" [selected]="item.id === sheet.getValue(field)" [value] = "item.id">{{item[selectName]}}</option>
-        </select>
-        </div>
-
-  `
-})
-
 @Component({
     selector: 'collection-property',
-    inputs: ['field', 'displayName', 'sheet', 'edit'],
+    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection'],
     template: `
       <button [disabled]="!edit" class="medium ui basic button"
         *ngFor="let item of sheet.getValue(field)"
@@ -217,14 +197,36 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
   `
 })
 export class CollectionProperty extends BaseProperty<String>  {
+    @Output() routeItemOutlet = new EventEmitter<any>();
+    private collection: string;
     constructor() {
         super();
     }
     onSelect(item) {
-        console.log(item);
+        this.routeItemOutlet.emit({obj:item, path:this.collection});
     }
 }
 
+
+
+//@Component({
+//    selector: 'subselect-property',
+//    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName', 'joinId', 'selectId'],
+//    template: `
+//       <h4 class="ui top attached header">
+//           {{ displayName }}
+//      </h4>
+//       <div *ngIf="!edit" class="ui attached segment">
+//           {{ getDisplayItem() }}
+//       </div>
+//        <div *ngIf="edit" class="ui attached segment">
+//        <select class="ui fluid search selection dropdown"  (change)="onSelect($event.target.value)">
+//            <option *ngFor="let item of items" [selected]="item.id === sheet.getValue(field)" [value] = "item.id">{{item[selectName]}}</option>
+//        </select>
+//        </div>
+//
+//  `
+//})
 //export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
 //    items: any = [];
 //    itemsUrl: string;

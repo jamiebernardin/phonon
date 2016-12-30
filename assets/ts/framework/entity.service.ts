@@ -58,6 +58,10 @@ export class EntityService {
         let url = path + '/' +  id;
         return this._http.put(url, JSON.stringify(mods), this._loginService.getRequestOptions());
     }
+    delete(path: string, id: string) {
+        let url = path + '/' +  id;
+        return this._http.delete(url, this._loginService.getRequestOptions());
+    }
     create(path: string, obj: any) {
         let url = path;
         return this._http.post(url, JSON.stringify(obj), this._loginService.getRequestOptions());

@@ -56,11 +56,22 @@ export class BaseDetailComponent implements OnInit, EntityPath {
     doEdit() {
         this.edit = true;
     }
+    doDelete() {
+        this.entityService.delete(this.getPath(), this.sheet.getValue('id')).subscribe(
+            res => {
+                this.back();
+            })
+    }
     cancel() {
         this.edit = false;
         if (this.create) {
             this.back();
         }
+    }
+    routeToItem(item) {
+        RouteSupport.get().putParam('entity', item.obj);
+        RouteSupport.get().putParam('searchStr', '');
+        this.router.navigate( [item.path+'-detail'] );
     }
     save() {
         let changes = this.sheet.getChangedValues();

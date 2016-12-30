@@ -67,6 +67,10 @@ System.register(["@angular/core", "@angular/http", "rxjs/Rx", "./login.service"]
                     var url = path + '/' + id;
                     return this._http.put(url, JSON.stringify(mods), this._loginService.getRequestOptions());
                 };
+                EntityService.prototype.delete = function (path, id) {
+                    var url = path + '/' + id;
+                    return this._http.delete(url, this._loginService.getRequestOptions());
+                };
                 EntityService.prototype.create = function (path, obj) {
                     var url = path;
                     return this._http.post(url, JSON.stringify(obj), this._loginService.getRequestOptions());

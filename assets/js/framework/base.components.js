@@ -58,11 +58,22 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                 BaseDetailComponent.prototype.doEdit = function () {
                     this.edit = true;
                 };
+                BaseDetailComponent.prototype.doDelete = function () {
+                    var _this = this;
+                    this.entityService.delete(this.getPath(), this.sheet.getValue('id')).subscribe(function (res) {
+                        _this.back();
+                    });
+                };
                 BaseDetailComponent.prototype.cancel = function () {
                     this.edit = false;
                     if (this.create) {
                         this.back();
                     }
+                };
+                BaseDetailComponent.prototype.routeToItem = function (item) {
+                    RouteSupport.get().putParam('entity', item.obj);
+                    RouteSupport.get().putParam('searchStr', '');
+                    this.router.navigate([item.path + '-detail']);
                 };
                 BaseDetailComponent.prototype.save = function () {
                     var _this = this;
