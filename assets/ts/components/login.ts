@@ -18,7 +18,7 @@ import {Observable} from 'rxjs/Rx'
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" [ngModelOptions]="{standalone: true}"  [(ngModel)]="password">
+        <input type="password" placeholder="******" [ngModelOptions]="{standalone: true}"  [(ngModel)]="password">
       </div>
       <div class="ui basic submit button" (click)="login()">Submit</div>
     </form>

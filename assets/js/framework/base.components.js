@@ -48,8 +48,8 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                 BaseDetailComponent.prototype.ngOnInit = function () {
                     this.searchStr = RouteSupport.get().takeParam('searchStr');
                     this.create = (typeof RouteSupport.get().takeParam('create') !== 'undefined');
-                    this.edit = this.create;
                     this.sheet.setEntity(RouteSupport.get().takeParam('entity'));
+                    this.edit = this.create;
                 };
                 BaseDetailComponent.prototype.back = function () {
                     RouteSupport.get().putParam('searchStr', this.searchStr);
@@ -59,10 +59,16 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                     this.edit = true;
                 };
                 BaseDetailComponent.prototype.doDelete = function () {
-                    var _this = this;
-                    this.entityService.delete(this.getPath(), this.sheet.getValue('id')).subscribe(function (res) {
-                        _this.back();
-                    });
+                    jQuery('.ui.modal').modal('show');
+                };
+                BaseDetailComponent.prototype.confirmDelete = function (confirm) {
+                    var that = this;
+                    if (confirm) {
+                        that.entityService.delete(this.getPath(), this.sheet.getValue('id')).subscribe(function (res) {
+                            that.back();
+                        });
+                    }
+                    jQuery('.ui.modal').modal('hide');
                 };
                 BaseDetailComponent.prototype.cancel = function () {
                     this.edit = false;

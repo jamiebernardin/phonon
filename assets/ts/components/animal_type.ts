@@ -7,7 +7,7 @@
 import {Component} from '@angular/core'
 import {BaseDetailComponent, BaseRowComponent, BaseSearchComponent} from '../framework/base.components'
 import {BaseProperty, StringProperty, BooleanProperty, IntegerProperty, DateTimeProperty,
-        SelectProperty, SubSelectProperty, TextProperty, CollectionProperty } from '../framework/properties'
+        SelectProperty, TextProperty, CollectionProperty } from '../framework/properties'
 import {EntityService, Entity} from '../framework/entity.service'
 import {Router} from '@angular/router'
 
@@ -41,8 +41,8 @@ export class Animal_typeDetailComponent extends BaseDetailComponent {
       </div>
       <p></p>
       <div class="ui label">
-        Name: 
-        <div class="detail">{{entity.getObj().name}}</div>
+        Life Expectancy: 
+        <div class="detail">{{entity.getObj().life_expectancy}}</div>
       </div>
     </div>`
 })

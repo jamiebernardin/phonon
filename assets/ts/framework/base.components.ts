@@ -3,6 +3,7 @@ import {Router} from '@angular/router'
 import {Entity, EntityService, EntityPath} from './entity.service'
 import {PropertySheet} from './property.sheet'
 
+declare var jQuery: any;
 
 export class RouteSupport {
     putParam(name: string, val: any) {
@@ -46,8 +47,8 @@ export class BaseDetailComponent implements OnInit, EntityPath {
     ngOnInit() {
         this.searchStr = RouteSupport.get().takeParam('searchStr');
         this.create = (typeof RouteSupport.get().takeParam('create') !== 'undefined');
-        this.edit = this.create;
         this.sheet.setEntity(RouteSupport.get().takeParam('entity'));
+        this.edit = this.create;
     }
     back() {
         RouteSupport.get().putParam('searchStr', this.searchStr);
@@ -57,10 +58,17 @@ export class BaseDetailComponent implements OnInit, EntityPath {
         this.edit = true;
     }
     doDelete() {
-        this.entityService.delete(this.getPath(), this.sheet.getValue('id')).subscribe(
-            res => {
-                this.back();
-            })
+        jQuery('.ui.modal').modal('show');
+    }
+    confirmDelete(confirm: boolean) {
+        let that = this;
+        if (confirm) {
+            that.entityService.delete(this.getPath(), this.sheet.getValue('id')).subscribe(
+                    res => {
+                    that.back();
+                })
+        }
+        jQuery('.ui.modal').modal('hide');
     }
     cancel() {
         this.edit = false;

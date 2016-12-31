@@ -11,13 +11,13 @@ module.exports = {
             name: 'Pet',
             displayField: 'name',
             searchField: 'name',
-            rowDetailFields: ['name']
+            rowDetailFields: ['color']
         },
         {
             name: 'Animal_type',
             displayField: 'name',
             searchField: 'name',
-            rowDetailFields: ['name']
+            rowDetailFields: ['life_expectancy']
         }
     ]
 }

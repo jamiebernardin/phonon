@@ -124,13 +124,14 @@ module.exports = {
         require('fs').writeFileSync(outFile, content, 'utf8');
     },
     appMenu: function(models) {
+        var that = this;
         var compTemplate = './scaffolding/app.component-template.html';
         var content = require('fs').readFileSync(compTemplate, 'utf8');
         models.reverse().forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
             var searchStr = '        <!--MENU_BEGIN-->';
             var replaceStr = searchStr + '\n       <a class=\"item\" (click)=\"route(\'';
-            replaceStr += name + '-search\')\">' + Name + '</a>';
+            replaceStr += name + '-search\')\">' + that.displayName(name) + '</a>';
             content = content.replace(searchStr, replaceStr);
         });
         models.reverse();

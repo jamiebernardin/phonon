@@ -10,6 +10,9 @@ module.exports = {
         animal_type: {
             model: 'animal_type'
         },
+        color: {
+            type: 'string'
+        },
         owner: {
             model: 'person'
         }

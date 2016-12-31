@@ -20,6 +20,16 @@
         Delete
     </button>
 </div>
+<div class="ui small modal">
+    <div class="header">Delete!</div>
+    <div class="content">
+        <p>Are you sure?</p>
+    </div>
+    <div class="actions">
+        <div (click)="confirmDelete(false)" class="ui cancel button">Cancel</div>
+        <div (click)="confirmDelete(true)" class="ui approve button">Delete</div>
+    </div>
+</div>
 <p></p>
 <p></p>
 <div class='ui three column doubling stackable grid'>
@@ -30,5 +40,13 @@
           [field]="'name'"
           [displayName]="'Name'">
        </string-property>
+   </div>
+   <div class='column'>
+       <integer-property
+          [sheet]="sheet"
+          [edit]="edit"
+          [field]="'life_expectancy'"
+          [displayName]="'Life Expectancy'">
+       </integer-property>
    </div>
 </div>

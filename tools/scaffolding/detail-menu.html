@@ -20,5 +20,15 @@
         Delete
     </button>
 </div>
+<div class="ui small modal">
+    <div class="header">Delete!</div>
+    <div class="content">
+        <p>Are you sure?</p>
+    </div>
+    <div class="actions">
+        <div (click)="confirmDelete(false)" class="ui cancel button">Cancel</div>
+        <div (click)="confirmDelete(true)" class="ui approve button">Delete</div>
+    </div>
+</div>
 <p></p>
 <p></p>

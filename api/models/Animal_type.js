@@ -6,6 +6,9 @@ module.exports = {
     attributes: {
         name: {
             type: 'string'
+        },
+        life_expectancy: {
+            type: 'integer'
         }
     }
 };

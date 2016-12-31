@@ -8,7 +8,7 @@ import {Location, LocationStrategy, HashLocationStrategy, APP_BASE_HREF} from '@
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/Observable/empty';
 import {BaseProperty, StringProperty, BooleanProperty, DateTimeProperty, TextProperty,
-    IntegerProperty, SelectProperty, SubSelectProperty, CollectionProperty}  from './framework/properties'
+    IntegerProperty, SelectProperty, CollectionProperty}  from './framework/properties'
 import {LoginComponent} from './components/login'
 import {EntityService} from './framework/entity.service'
 import {LoginService} from './framework/login.service'

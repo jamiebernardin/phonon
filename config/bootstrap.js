@@ -27,7 +27,7 @@ module.exports.bootstrap = function(cb) {
     }
   });
   ['dog', 'cat', 'parrot', 'rabbit'].forEach( function(p) {
-          Animal_type.create({name: p, age: Math.random() * 100}).exec(function (err, person) {
+          Animal_type.create({name: p, life_expectancy: (5 + Math.random() * 10)}).exec(function (err, person) {
             if (err) {
               console.log(err);
             } else {
@@ -37,8 +37,8 @@ module.exports.bootstrap = function(cb) {
         }
     );
 
-  ['jamie', 'tiger', 'henrick'].forEach( function(p) {
-        Person.create({name: p, age: Math.random() * 100, handicap: Math.random() * 100}).exec(function (err, person) {
+  ['henry', 'sally', 'sergei', 'andre'].forEach( function(p) {
+        Person.create({name: p, age: (10 + Math.random() * 40), handicap: Math.random() * 30}).exec(function (err, person) {
           if (err) {
             console.log(err);
           } else {
@@ -47,20 +47,6 @@ module.exports.bootstrap = function(cb) {
         });
       }
   );
-  //[
-  //  { city: 'San Francisco', state: 'CA', zip: 13434},
-  //  { city: 'New York', state: 'NY', zip: 10026},
-  //  { city: 'Boston', state: 'MA', zip: 34244}
-  //].forEach(function( place) {
-  //      Place.create(place).exec(function (err, place){
-  //        if (err) {
-  //          console.log(err);
-  //        } else {
-  //          console.log('place: ' + place.city + ' created.');
-  //        }
-  //      });
-  //    });
-
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

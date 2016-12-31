@@ -44,7 +44,7 @@ System.register(["@angular/core", "../framework/login.service", "@angular/router
                     selector: 'login-panel',
                     providers: [login_service_1.LoginService],
                     inputs: ['error'],
-                    template: "\n    <form class=\"ui form \">\n      <div class=\"field\">\n        <label>Email</label>\n        <input placeholder=\"email\" type=\"text\" [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"email\">\n      </div>\n      <div class=\"field\">\n        <label>Password</label>\n        <input type=\"password\" [ngModelOptions]=\"{standalone: true}\"  [(ngModel)]=\"password\">\n      </div>\n      <div class=\"ui basic submit button\" (click)=\"login()\">Submit</div>\n    </form>\n    <div *ngIf=\"error\" class=\"ui bottom attached error message\">\n      {{error}}\n    </div>\n  "
+                    template: "\n    <form class=\"ui form \">\n      <div class=\"field\">\n        <label>Email</label>\n        <input placeholder=\"email\" type=\"text\" [ngModelOptions]=\"{standalone: true}\" [(ngModel)]=\"email\">\n      </div>\n      <div class=\"field\">\n        <label>Password</label>\n        <input type=\"password\" placeholder=\"******\" [ngModelOptions]=\"{standalone: true}\"  [(ngModel)]=\"password\">\n      </div>\n      <div class=\"ui basic submit button\" (click)=\"login()\">Submit</div>\n    </form>\n    <div *ngIf=\"error\" class=\"ui bottom attached error message\">\n      {{error}}\n    </div>\n  "
                 }),
                 __metadata("design:paramtypes", [login_service_1.LoginService, router_1.Router])
             ], LoginComponent);
