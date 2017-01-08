@@ -7,14 +7,8 @@ module.exports = {
         name: {
             type: 'string'
         },
-        animal_type: {
-            model: 'animal_type'
-        },
-        color: {
+        description: {
             type: 'string'
-        },
-        owner: {
-            model: 'person'
         }
     }
 };

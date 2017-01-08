@@ -1,23 +1,35 @@
 module.exports = {
     models: [
         {
-            name: 'Person',
+            name: 'Worker',
             displayField: 'name',
             searchField: 'name',
-            rowDetailFields: ['age', 'handicap'],
-            collections: ['pets']  // this is to tell the controller to populate collections
+            rowDetailFields: ['skill'],
+            collections: ['assigned', 'watching']  // this is to tell the controller to populate collections
         },
         {
-            name: 'Pet',
+            name: 'Ticket',
             displayField: 'name',
-            searchField: 'name',
-            rowDetailFields: ['color']
+            searchField: 'description',
+            rowDetailFields: ['description']
         },
         {
-            name: 'Animal_type',
+            name: 'Priority_type',
             displayField: 'name',
             searchField: 'name',
-            rowDetailFields: ['life_expectancy']
+            rowDetailFields: ['description']
+        },
+        {
+            name: 'Ticket_status',
+            displayField: 'name',
+            searchField: 'name',
+            rowDetailFields: ['description']
+        },
+        {
+            name: 'Skill_type',
+            displayField: 'name',
+            searchField: 'name',
+            rowDetailFields: ['description']
         }
     ]
 }

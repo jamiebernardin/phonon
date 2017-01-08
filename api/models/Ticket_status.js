@@ -1,5 +1,5 @@
 /**
- * Created by jbernardin on 12/27/16.
+ * Created by jbernardin on 1/7/17.
  */
 module.exports = {
 
@@ -7,8 +7,8 @@ module.exports = {
         name: {
             type: 'string'
         },
-        life_expectancy: {
-            type: 'integer'
+        description: {
+            type: 'string'
         }
     }
 };

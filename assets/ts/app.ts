@@ -13,9 +13,11 @@ import {LoginComponent} from './components/login'
 import {EntityService} from './framework/entity.service'
 import {LoginService} from './framework/login.service'
 //BEGIN_MODEL_IMPORTS
-import {Animal_typeRowComponent, Animal_typeDetailComponent, Animal_typeSearchComponent} from './components/animal_type'
-import {PetRowComponent, PetDetailComponent, PetSearchComponent} from './components/pet'
-import {PersonRowComponent, PersonDetailComponent, PersonSearchComponent} from './components/person'
+import {Skill_typeRowComponent, Skill_typeDetailComponent, Skill_typeSearchComponent} from './components/skill_type'
+import {Ticket_statusRowComponent, Ticket_statusDetailComponent, Ticket_statusSearchComponent} from './components/ticket_status'
+import {Priority_typeRowComponent, Priority_typeDetailComponent, Priority_typeSearchComponent} from './components/priority_type'
+import {TicketRowComponent, TicketDetailComponent, TicketSearchComponent} from './components/ticket'
+import {WorkerRowComponent, WorkerDetailComponent, WorkerSearchComponent} from './components/worker'
 //END_MODEL_IMPORTS
 
 @Component({
@@ -25,12 +27,16 @@ export class EmptyPanel {}
 
 const routes: Routes = [
     //BEGIN_ROUTES
-    {path: 'animal_type-detail', component: Animal_typeDetailComponent},
-    {path: 'animal_type-search', component: Animal_typeSearchComponent},
-    {path: 'pet-detail', component: PetDetailComponent},
-    {path: 'pet-search', component: PetSearchComponent},
-    {path: 'person-detail', component: PersonDetailComponent},
-    {path: 'person-search', component: PersonSearchComponent},
+    {path: 'skill_type-detail', component: Skill_typeDetailComponent},
+    {path: 'skill_type-search', component: Skill_typeSearchComponent},
+    {path: 'ticket_status-detail', component: Ticket_statusDetailComponent},
+    {path: 'ticket_status-search', component: Ticket_statusSearchComponent},
+    {path: 'priority_type-detail', component: Priority_typeDetailComponent},
+    {path: 'priority_type-search', component: Priority_typeSearchComponent},
+    {path: 'ticket-detail', component: TicketDetailComponent},
+    {path: 'ticket-search', component: TicketSearchComponent},
+    {path: 'worker-detail', component: WorkerDetailComponent},
+    {path: 'worker-search', component: WorkerSearchComponent},
     //END_ROUTES
     {path: 'empty',  component: EmptyPanel}
 ];
@@ -48,7 +54,7 @@ export class AppComponent implements OnInit {
     login(event) {
         this._loginService.login(event.email, event.password).subscribe(
             () => {
-                this.route('person-search');
+                this.route('worker-search');
                 this.error = '';
             },
                 err => {
@@ -70,7 +76,7 @@ export class AppComponent implements OnInit {
     }
     ngOnInit() {
         this._loginService.checkLoggedIn().
-            map(data => this._router.navigate(['person-search'])).catch(err => Observable.empty()).subscribe();
+            map(data => this._router.navigate(['worker-search'])).catch(err => Observable.empty()).subscribe();
         Observable.timer(this.POLL_INTERVAL, this.POLL_INTERVAL).subscribe(t => {
             this._loginService.checkLoggedIn().catch(err => Observable.empty()).subscribe();
         });
@@ -80,9 +86,11 @@ export class AppComponent implements OnInit {
 @NgModule({
     declarations: [
         //BEGIN_MODEL_DECS
-        Animal_typeRowComponent, Animal_typeDetailComponent, Animal_typeSearchComponent,
-        PetRowComponent, PetDetailComponent, PetSearchComponent,
-        PersonRowComponent, PersonDetailComponent, PersonSearchComponent,
+        Skill_typeRowComponent, Skill_typeDetailComponent, Skill_typeSearchComponent,
+        Ticket_statusRowComponent, Ticket_statusDetailComponent, Ticket_statusSearchComponent,
+        Priority_typeRowComponent, Priority_typeDetailComponent, Priority_typeSearchComponent,
+        TicketRowComponent, TicketDetailComponent, TicketSearchComponent,
+        WorkerRowComponent, WorkerDetailComponent, WorkerSearchComponent,
         //END_MODEL_DECS
         AppComponent, EmptyPanel, StringProperty, BooleanProperty, SelectProperty,
         DateTimeProperty, TextProperty, IntegerProperty, LoginComponent, CollectionProperty

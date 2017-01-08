@@ -90,8 +90,9 @@ module.exports = {
             if (typeof collections !== 'undefined') {
                 colStr = '.'
                 collections.forEach(function(collection) {
-                   colStr += 'populate(\'' + collection + '\')'
+                   colStr += 'populate(\'' + collection + '\').'
                 });
+                colStr = colStr.slice(0,colStr.length-1);
             }
             content = content.replace('POPULATE_COLLECTIONS', colStr);
             require('fs').writeFileSync(outFile, content, 'utf8');
