@@ -36,6 +36,8 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                     }
                     this.sheet.addProperty(this);
                 };
+                BaseProperty.prototype.ngOnChanges = function (changes) {
+                };
                 return BaseProperty;
             }());
             __decorate([
@@ -194,10 +196,34 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 function CollectionProperty() {
                     var _this = _super.call(this) || this;
                     _this.routeItemOutlet = new core_1.EventEmitter();
+                    _this.isMarkedForDelete = {};
                     return _this;
                 }
+                CollectionProperty.prototype.markClean = function () {
+                    for (var _i = 0, _a = this.sheet.getValue(this.field); _i < _a.length; _i++) {
+                        var item = _a[_i];
+                        this.isMarkedForDelete[item] = false;
+                    }
+                };
+                CollectionProperty.prototype.ngOnInit = function () {
+                    _super.prototype.ngOnInit.call(this);
+                    this.markClean();
+                };
                 CollectionProperty.prototype.onSelect = function (item) {
-                    this.routeItemOutlet.emit({ obj: item, path: this.collection });
+                    if (!this.edit) {
+                        this.routeItemOutlet.emit({ obj: item, path: this.collection });
+                    }
+                    else {
+                        this.isMarkedForDelete[item] = !this.isMarkedForDelete[item];
+                    }
+                };
+                CollectionProperty.prototype.ngOnChanges = function (changes) {
+                    _super.prototype.ngOnChanges.call(this, changes);
+                    if (typeof changes['edit'] !== 'undefined') {
+                        if (!changes['edit'].currentValue) {
+                            this.markClean();
+                        }
+                    }
                 };
                 return CollectionProperty;
             }(BaseProperty));
@@ -209,7 +235,7 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 core_1.Component({
                     selector: 'collection-property',
                     inputs: ['field', 'displayName', 'sheet', 'edit', 'collection'],
-                    template: "\n      <button [disabled]=\"!edit\" class=\"medium ui basic button\"\n        *ngFor=\"let item of sheet.getValue(field)\"\n        (click)=\"onSelect(item)\">{{item.name}}\n      </button>\n  "
+                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"><i class=\"add icon\"></i></button>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of sheet.getValue(field)\"\n        [ngClass]=\"{red: isMarkedForDelete[item]}\"\n        (click)=\"onSelect(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.name}}\n      </button>\n  "
                 }),
                 __metadata("design:paramtypes", [])
             ], CollectionProperty);

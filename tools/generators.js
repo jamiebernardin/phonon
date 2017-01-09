@@ -61,7 +61,6 @@ module.exports = {
                     collections.forEach(function (fieldModel) {
                         content += '<div class=\"ui container segment \">\n';
                         content += '    <h4 class=\"ui header\">' + fieldModel.field + '</h4>\n';
-                        //content += "   <div class='column'>\n";
                         content += "       <collection-property\n";
                         content += "          [sheet]=\"sheet\"\n";
                         content += "          (routeItemOutlet)=\"routeToItem($event)\"\n";

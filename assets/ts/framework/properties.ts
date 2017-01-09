@@ -2,13 +2,13 @@
  * Created by jbernardin on 4/14/16.
  */
 import {PropertySheet} from './property.sheet'
-import {ElementRef, Component, OnInit, Input, Output, EventEmitter, OnChanges} from '@angular/core'
+import {ElementRef, Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core'
 import {EntityService} from './entity.service'
 
 declare var jQuery: any;
 
 
-export class BaseProperty<T>  {
+export class BaseProperty<T> implements OnChanges, OnInit {
     newValue: T;
     displayName: string;
     field: string;
@@ -21,6 +21,9 @@ export class BaseProperty<T>  {
             this.newValue = this.defaultValue;
         }
         this.sheet.addProperty(this)
+
+    }
+    ngOnChanges(changes: SimpleChanges) {
 
     }
 }
@@ -190,20 +193,48 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
     selector: 'collection-property',
     inputs: ['field', 'displayName', 'sheet', 'edit', 'collection'],
     template: `
-      <button [disabled]="!edit" class="medium ui basic button"
+      <div *ngIf="edit">
+      <button class="small ui basic button"><i class="add icon"></i></button>
+      </div>
+      <p *ngIf="edit"></p>
+      <button class="medium ui basic button"
         *ngFor="let item of sheet.getValue(field)"
-        (click)="onSelect(item)">{{item.name}}
+        [ngClass]="{red: isMarkedForDelete[item]}"
+        (click)="onSelect(item)">
+        <i *ngIf="edit" class="remove icon"></i>{{item.name}}
       </button>
   `
 })
-export class CollectionProperty extends BaseProperty<String>  {
+export class CollectionProperty extends BaseProperty<String> implements OnInit, OnChanges {
     @Output() routeItemOutlet = new EventEmitter<any>();
     private collection: string;
+    private isMarkedForDelete = {};
     constructor() {
         super();
     }
+    private markClean() {
+        for (let item of this.sheet.getValue(this.field)) {
+            this.isMarkedForDelete[item] = false;
+        }
+    }
+    ngOnInit() {
+        super.ngOnInit();
+        this.markClean();
+    }
     onSelect(item) {
-        this.routeItemOutlet.emit({obj:item, path:this.collection});
+        if (!this.edit) {
+            this.routeItemOutlet.emit({obj:item, path:this.collection});
+        } else {
+            this.isMarkedForDelete[item] = !this.isMarkedForDelete[item];
+        }
+    }
+    ngOnChanges(changes: SimpleChanges) {
+        super.ngOnChanges(changes);
+        if (typeof changes['edit'] !== 'undefined') {
+            if (!changes['edit'].currentValue) {
+                this.markClean();
+            }
+        }
     }
 }
 

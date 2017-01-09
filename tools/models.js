@@ -11,7 +11,8 @@ module.exports = {
             name: 'Ticket',
             displayField: 'name',
             searchField: 'description',
-            rowDetailFields: ['description']
+            rowDetailFields: ['description'],
+            collections: ['watchers']
         },
         {
             name: 'Priority_type',
