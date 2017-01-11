@@ -81,6 +81,8 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                     RouteSupport.get().putParam('searchStr', '');
                     this.router.navigate([item.path + '-detail']);
                 };
+                BaseDetailComponent.prototype.addRemoveItems = function () {
+                };
                 BaseDetailComponent.prototype.save = function () {
                     var _this = this;
                     var changes = this.sheet.getChangedValues();

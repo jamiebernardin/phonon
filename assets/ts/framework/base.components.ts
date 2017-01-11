@@ -81,6 +81,9 @@ export class BaseDetailComponent implements OnInit, EntityPath {
         RouteSupport.get().putParam('searchStr', '');
         this.router.navigate( [item.path+'-detail'] );
     }
+    addRemoveItems() {
+
+    }
     save() {
         let changes = this.sheet.getChangedValues();
         if (Object.getOwnPropertyNames(changes).length !== 0) {

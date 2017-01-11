@@ -21,7 +21,6 @@ export class BaseProperty<T> implements OnChanges, OnInit {
             this.newValue = this.defaultValue;
         }
         this.sheet.addProperty(this)
-
     }
     ngOnChanges(changes: SimpleChanges) {
 
@@ -191,42 +190,67 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
 
 @Component({
     selector: 'collection-property',
-    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection'],
+    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection', 'selectName'],
     template: `
       <div *ngIf="edit">
-      <button class="small ui basic button"><i class="add icon"></i></button>
+      <button class="small ui basic button"  (click)="onNewItemSelect(item)><i class="add icon"></i></button>
+      <select class="ui dropdown" (change)="onNewItemSelect($event.target.value)" >
+        <option *ngFor="let item of items" [selected]="item.id === 1" [value] = "item.id">{{item[selectName]}}</option>
+      </select>
       </div>
       <p *ngIf="edit"></p>
       <button class="medium ui basic button"
         *ngFor="let item of sheet.getValue(field)"
         [ngClass]="{red: isMarkedForDelete[item]}"
-        (click)="onSelect(item)">
+        (click)="onItemSelect(item)">
         <i *ngIf="edit" class="remove icon"></i>{{item.name}}
       </button>
   `
 })
-export class CollectionProperty extends BaseProperty<String> implements OnInit, OnChanges {
+export class CollectionProperty extends BaseProperty< any[] > implements OnInit, OnChanges {
     @Output() routeItemOutlet = new EventEmitter<any>();
     private collection: string;
     private isMarkedForDelete = {};
-    constructor() {
+    items: any = [];
+    selectName: string;
+    newItem: Number;
+    constructor(private elementRef: ElementRef, private _entityService: EntityService) {
         super();
     }
     private markClean() {
-        for (let item of this.sheet.getValue(this.field)) {
-            this.isMarkedForDelete[item] = false;
-        }
+        let collection = this.sheet.getValue(this.field);
+        console.log(this.field);
+        console.log(collection);
+        if (collection !== undefined) {
+            for (let item of this.sheet.getValue(this.field)) {
+                this.isMarkedForDelete[item] = false;
+            }
+         }
     }
     ngOnInit() {
         super.ngOnInit();
         this.markClean();
+        let itemsUrl = this.collection + '/items';
+        let that = this;
+        this._entityService.getUrl(itemsUrl).subscribe(
+                items =>  {
+                Array.prototype.push.apply(that.items, items);
+                if (typeof items[0] !== 'undefined') {
+                    that.onNewItemSelect(items[0].id);
+                }
+            }
+        );
     }
-    onSelect(item) {
+    onItemSelect(item) {
         if (!this.edit) {
             this.routeItemOutlet.emit({obj:item, path:this.collection});
         } else {
             this.isMarkedForDelete[item] = !this.isMarkedForDelete[item];
         }
+    }
+    onNewItemSelect(id: Number) {
+        this.newItem = id;
+        console.log(id);
     }
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);

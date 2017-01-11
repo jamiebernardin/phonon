@@ -66,7 +66,8 @@ module.exports = {
                         content += "          (routeItemOutlet)=\"routeToItem($event)\"\n";
                         content += "          [edit]=\"edit\"\n";
                         content += "          [collection]=\"'" + fieldModel.collection + "'\"\n";
-                        content += "          [field]=\"'" + fieldModel.field + "'\">\n";
+                        content += "          [field]=\"'" + fieldModel.field + "'\"\n";
+                        content += "          [selectName]=\"" + "\'name\'" + "\">\n";
                         content += '       </collection-property>\n';
                         content += '   </div>\n';
                 })

@@ -193,29 +193,49 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
             exports_1("SelectProperty", SelectProperty);
             CollectionProperty = (function (_super) {
                 __extends(CollectionProperty, _super);
-                function CollectionProperty() {
+                function CollectionProperty(elementRef, _entityService) {
                     var _this = _super.call(this) || this;
+                    _this.elementRef = elementRef;
+                    _this._entityService = _entityService;
                     _this.routeItemOutlet = new core_1.EventEmitter();
                     _this.isMarkedForDelete = {};
+                    _this.items = [];
                     return _this;
                 }
                 CollectionProperty.prototype.markClean = function () {
-                    for (var _i = 0, _a = this.sheet.getValue(this.field); _i < _a.length; _i++) {
-                        var item = _a[_i];
-                        this.isMarkedForDelete[item] = false;
+                    var collection = this.sheet.getValue(this.field);
+                    console.log(this.field);
+                    console.log(collection);
+                    if (collection !== undefined) {
+                        for (var _i = 0, _a = this.sheet.getValue(this.field); _i < _a.length; _i++) {
+                            var item = _a[_i];
+                            this.isMarkedForDelete[item] = false;
+                        }
                     }
                 };
                 CollectionProperty.prototype.ngOnInit = function () {
                     _super.prototype.ngOnInit.call(this);
                     this.markClean();
+                    var itemsUrl = this.collection + '/items';
+                    var that = this;
+                    this._entityService.getUrl(itemsUrl).subscribe(function (items) {
+                        Array.prototype.push.apply(that.items, items);
+                        if (typeof items[0] !== 'undefined') {
+                            that.onNewItemSelect(items[0].id);
+                        }
+                    });
                 };
-                CollectionProperty.prototype.onSelect = function (item) {
+                CollectionProperty.prototype.onItemSelect = function (item) {
                     if (!this.edit) {
                         this.routeItemOutlet.emit({ obj: item, path: this.collection });
                     }
                     else {
                         this.isMarkedForDelete[item] = !this.isMarkedForDelete[item];
                     }
+                };
+                CollectionProperty.prototype.onNewItemSelect = function (id) {
+                    this.newItem = id;
+                    console.log(id);
                 };
                 CollectionProperty.prototype.ngOnChanges = function (changes) {
                     _super.prototype.ngOnChanges.call(this, changes);
@@ -234,10 +254,10 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
             CollectionProperty = __decorate([
                 core_1.Component({
                     selector: 'collection-property',
-                    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection'],
-                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"><i class=\"add icon\"></i></button>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of sheet.getValue(field)\"\n        [ngClass]=\"{red: isMarkedForDelete[item]}\"\n        (click)=\"onSelect(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.name}}\n      </button>\n  "
+                    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection', 'selectName'],
+                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"  (click)=\"onNewItemSelect(item)><i class=\"add icon\"></i></button>\n      <select class=\"ui dropdown\" (change)=\"onNewItemSelect($event.target.value)\" >\n        <option *ngFor=\"let item of items\" [selected]=\"item.id === 1\" [value] = \"item.id\">{{item[selectName]}}</option>\n      </select>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of sheet.getValue(field)\"\n        [ngClass]=\"{red: isMarkedForDelete[item]}\"\n        (click)=\"onItemSelect(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.name}}\n      </button>\n  "
                 }),
-                __metadata("design:paramtypes", [])
+                __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], CollectionProperty);
             exports_1("CollectionProperty", CollectionProperty);
             //@Component({
