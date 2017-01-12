@@ -4,6 +4,7 @@
 import {PropertySheet} from './property.sheet'
 import {ElementRef, Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core'
 import {EntityService} from './entity.service'
+import * as _ from 'lodash'
 
 declare var jQuery: any;
 
@@ -188,75 +189,138 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
     }
 }
 
+export enum Status {
+    Delete,
+    Add,
+    Keep,
+    Available
+}
+
+export class EntityWrapper {
+    public entity: any;
+    public status: Status;
+    constructor( entity: any, status: Status ) {
+        this.entity = entity; this.status = status;
+    }
+}
+
+
 @Component({
     selector: 'collection-property',
     inputs: ['field', 'displayName', 'sheet', 'edit', 'collection', 'selectName'],
     template: `
       <div *ngIf="edit">
-      <button class="small ui basic button"  (click)="onNewItemSelect(item)><i class="add icon"></i></button>
-      <select class="ui dropdown" (change)="onNewItemSelect($event.target.value)" >
-        <option *ngFor="let item of items" [selected]="item.id === 1" [value] = "item.id">{{item[selectName]}}</option>
+      <button class="small ui basic button"  (click)="addNewItem($event)"><i class="add icon"></i></button>
+      <select class="ui dropdown" [(ngModel)]="selectedItem" (ngModelChange)="onNewItemSelect($event)" >
+        <option *ngFor="let item of getItems([Status.Available])"  [ngValue] = "item.entity.id">{{item.entity[selectName]}}</option>
       </select>
       </div>
       <p *ngIf="edit"></p>
       <button class="medium ui basic button"
-        *ngFor="let item of sheet.getValue(field)"
-        [ngClass]="{red: isMarkedForDelete[item]}"
-        (click)="onItemSelect(item)">
-        <i *ngIf="edit" class="remove icon"></i>{{item.name}}
+        *ngFor="let item of getItems([Status.Add, Status.Keep, Status.Delete])"
+        [ngClass]="{green: item.status === Status.Add, red: item.status === Status.Delete}"
+        (click)="onItemClick(item)">
+        <i *ngIf="edit" class="remove icon"></i>{{item.entity.name}}
       </button>
   `
 })
 export class CollectionProperty extends BaseProperty< any[] > implements OnInit, OnChanges {
     @Output() routeItemOutlet = new EventEmitter<any>();
     private collection: string;
-    private isMarkedForDelete = {};
-    items: any = [];
+    items: any[] = [];
     selectName: string;
-    newItem: Number;
+    newItemId: Number;
+    selectedItem: EntityWrapper;
+    public Status = Status;
     constructor(private elementRef: ElementRef, private _entityService: EntityService) {
         super();
     }
-    private markClean() {
-        let collection = this.sheet.getValue(this.field);
-        console.log(this.field);
-        console.log(collection);
-        if (collection !== undefined) {
-            for (let item of this.sheet.getValue(this.field)) {
-                this.isMarkedForDelete[item] = false;
+    cancel() {
+        var that = this;
+        this.items = _.map(that.items, function(item) {
+            if (item.status == Status.Delete) {
+                item.status = Status.Keep;
+            } else if (item.status == Status.Add) {
+                item.status = Status.Available;
             }
-         }
+            return item;
+        });
     }
     ngOnInit() {
         super.ngOnInit();
-        this.markClean();
-        let itemsUrl = this.collection + '/items';
+        let existingItems = this.sheet.getValue(this.field);
         let that = this;
-        this._entityService.getUrl(itemsUrl).subscribe(
-                items =>  {
-                Array.prototype.push.apply(that.items, items);
-                if (typeof items[0] !== 'undefined') {
-                    that.onNewItemSelect(items[0].id);
-                }
+        if (existingItems != undefined) {
+            for (let item of existingItems) {
+                that.items.push(new EntityWrapper(item, Status.Keep));
             }
-        );
-    }
-    onItemSelect(item) {
-        if (!this.edit) {
-            this.routeItemOutlet.emit({obj:item, path:this.collection});
-        } else {
-            this.isMarkedForDelete[item] = !this.isMarkedForDelete[item];
+        }
+        let itemsUrl = this.collection + '/items';
+        let isAvailable:Boolean = false;
+        this._entityService.getUrl(itemsUrl).subscribe(
+                items => {
+                    for (let item of items) {
+                        isAvailable = (_.findIndex(that.items, i =>  {
+                                return item.id === i.entity.id;
+                            }) < 0);
+                        if (isAvailable) {
+                            that.items.push(new EntityWrapper(item, Status.Available));
+                        }
+                    }
+                });
+        if (isAvailable) {
+            this.newItemId = this.getItems([Status.Available])[0].entity.id;
         }
     }
-    onNewItemSelect(id: Number) {
-        this.newItem = id;
-        console.log(id);
+    // OR operation
+    getItems(stati: Status[]) : EntityWrapper[] {
+        let that = this;
+        let items =  _.filter(that.items, item => {
+            let retVal = false;
+            for (let status of stati) {
+                if (typeof item.status !== 'undefined' && item.status === status) {
+                    retVal = true;
+                }
+            }
+            return retVal;
+        });
+        return (typeof items !== 'undefined') ? items: [];;
+    }
+    onItemClick(item) {
+        if (!this.edit) {
+            this.routeItemOutlet.emit({obj:item.entity, path:this.collection});
+        } else {
+            if (item.status == Status.Keep) {
+                item.status = Status.Delete;
+            } else if (item.status == Status.Add) {
+                item.status = Status.Available;
+            } else if (item.status == Status.Delete) {
+                item.status = Status.Keep;
+            }
+        }
+    }
+    onNewItemSelect(item) {
+        console.log('on new item selected:');
+        console.log(item);
+        this.selectedItem = item;
+    }
+    addNewItem(event) {
+        let that = this;
+        let itemToAdd = _.find(this.items, function(i) {
+            return i.entity.id == that.newItemId;
+        });
+        if (itemToAdd !== undefined) {
+            itemToAdd.status = Status.Add;
+        }
+        if (this.getItems([Status.Available]).length > 0) {
+            this.newItemId = this.getItems([Status.Available])[0].entity.id;
+        }
     }
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);
         if (typeof changes['edit'] !== 'undefined') {
             if (!changes['edit'].currentValue) {
-                this.markClean();
+                this.cancel();
             }
         }
     }

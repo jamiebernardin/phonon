@@ -1,4 +1,4 @@
-System.register(["@angular/core", "./entity.service"], function (exports_1, context_1) {
+System.register(["@angular/core", "./entity.service", "lodash"], function (exports_1, context_1) {
     "use strict";
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -15,7 +15,7 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, entity_service_1, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, CollectionProperty;
+    var core_1, entity_service_1, _, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, Status, EntityWrapper, CollectionProperty;
     return {
         setters: [
             function (core_1_1) {
@@ -23,6 +23,9 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
             },
             function (entity_service_1_1) {
                 entity_service_1 = entity_service_1_1;
+            },
+            function (_1) {
+                _ = _1;
             }
         ],
         execute: function () {
@@ -191,6 +194,21 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], SelectProperty);
             exports_1("SelectProperty", SelectProperty);
+            (function (Status) {
+                Status[Status["Delete"] = 0] = "Delete";
+                Status[Status["Add"] = 1] = "Add";
+                Status[Status["Keep"] = 2] = "Keep";
+                Status[Status["Available"] = 3] = "Available";
+            })(Status || (Status = {}));
+            exports_1("Status", Status);
+            EntityWrapper = (function () {
+                function EntityWrapper(entity, status) {
+                    this.entity = entity;
+                    this.status = status;
+                }
+                return EntityWrapper;
+            }());
+            exports_1("EntityWrapper", EntityWrapper);
             CollectionProperty = (function (_super) {
                 __extends(CollectionProperty, _super);
                 function CollectionProperty(elementRef, _entityService) {
@@ -198,50 +216,106 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                     _this.elementRef = elementRef;
                     _this._entityService = _entityService;
                     _this.routeItemOutlet = new core_1.EventEmitter();
-                    _this.isMarkedForDelete = {};
                     _this.items = [];
+                    _this.Status = Status;
                     return _this;
                 }
-                CollectionProperty.prototype.markClean = function () {
-                    var collection = this.sheet.getValue(this.field);
-                    console.log(this.field);
-                    console.log(collection);
-                    if (collection !== undefined) {
-                        for (var _i = 0, _a = this.sheet.getValue(this.field); _i < _a.length; _i++) {
-                            var item = _a[_i];
-                            this.isMarkedForDelete[item] = false;
+                CollectionProperty.prototype.cancel = function () {
+                    var that = this;
+                    this.items = _.map(that.items, function (item) {
+                        if (item.status == Status.Delete) {
+                            item.status = Status.Keep;
                         }
-                    }
+                        else if (item.status == Status.Add) {
+                            item.status = Status.Available;
+                        }
+                        return item;
+                    });
                 };
                 CollectionProperty.prototype.ngOnInit = function () {
                     _super.prototype.ngOnInit.call(this);
-                    this.markClean();
-                    var itemsUrl = this.collection + '/items';
+                    var existingItems = this.sheet.getValue(this.field);
                     var that = this;
+                    if (existingItems != undefined) {
+                        for (var _i = 0, existingItems_1 = existingItems; _i < existingItems_1.length; _i++) {
+                            var item = existingItems_1[_i];
+                            that.items.push(new EntityWrapper(item, Status.Keep));
+                        }
+                    }
+                    var itemsUrl = this.collection + '/items';
+                    var isAvailable = false;
                     this._entityService.getUrl(itemsUrl).subscribe(function (items) {
-                        Array.prototype.push.apply(that.items, items);
-                        if (typeof items[0] !== 'undefined') {
-                            that.onNewItemSelect(items[0].id);
+                        var _loop_1 = function (item) {
+                            isAvailable = (_.findIndex(that.items, function (i) {
+                                return item.id === i.entity.id;
+                            }) < 0);
+                            if (isAvailable) {
+                                that.items.push(new EntityWrapper(item, Status.Available));
+                            }
+                        };
+                        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+                            var item = items_1[_i];
+                            _loop_1(item);
                         }
                     });
+                    if (isAvailable) {
+                        this.newItemId = this.getItems([Status.Available])[0].entity.id;
+                    }
                 };
-                CollectionProperty.prototype.onItemSelect = function (item) {
+                // OR operation
+                CollectionProperty.prototype.getItems = function (stati) {
+                    var that = this;
+                    var items = _.filter(that.items, function (item) {
+                        var retVal = false;
+                        for (var _i = 0, stati_1 = stati; _i < stati_1.length; _i++) {
+                            var status_1 = stati_1[_i];
+                            if (typeof item.status !== 'undefined' && item.status === status_1) {
+                                retVal = true;
+                            }
+                        }
+                        return retVal;
+                    });
+                    return (typeof items !== 'undefined') ? items : [];
+                    ;
+                };
+                CollectionProperty.prototype.onItemClick = function (item) {
                     if (!this.edit) {
-                        this.routeItemOutlet.emit({ obj: item, path: this.collection });
+                        this.routeItemOutlet.emit({ obj: item.entity, path: this.collection });
                     }
                     else {
-                        this.isMarkedForDelete[item] = !this.isMarkedForDelete[item];
+                        if (item.status == Status.Keep) {
+                            item.status = Status.Delete;
+                        }
+                        else if (item.status == Status.Add) {
+                            item.status = Status.Available;
+                        }
+                        else if (item.status == Status.Delete) {
+                            item.status = Status.Keep;
+                        }
                     }
                 };
-                CollectionProperty.prototype.onNewItemSelect = function (id) {
-                    this.newItem = id;
-                    console.log(id);
+                CollectionProperty.prototype.onNewItemSelect = function (item) {
+                    console.log('on new item selected:');
+                    console.log(item);
+                    this.selectedItem = item;
+                };
+                CollectionProperty.prototype.addNewItem = function (event) {
+                    var that = this;
+                    var itemToAdd = _.find(this.items, function (i) {
+                        return i.entity.id == that.newItemId;
+                    });
+                    if (itemToAdd !== undefined) {
+                        itemToAdd.status = Status.Add;
+                    }
+                    if (this.getItems([Status.Available]).length > 0) {
+                        this.newItemId = this.getItems([Status.Available])[0].entity.id;
+                    }
                 };
                 CollectionProperty.prototype.ngOnChanges = function (changes) {
                     _super.prototype.ngOnChanges.call(this, changes);
                     if (typeof changes['edit'] !== 'undefined') {
                         if (!changes['edit'].currentValue) {
-                            this.markClean();
+                            this.cancel();
                         }
                     }
                 };
@@ -255,7 +329,7 @@ System.register(["@angular/core", "./entity.service"], function (exports_1, cont
                 core_1.Component({
                     selector: 'collection-property',
                     inputs: ['field', 'displayName', 'sheet', 'edit', 'collection', 'selectName'],
-                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"  (click)=\"onNewItemSelect(item)><i class=\"add icon\"></i></button>\n      <select class=\"ui dropdown\" (change)=\"onNewItemSelect($event.target.value)\" >\n        <option *ngFor=\"let item of items\" [selected]=\"item.id === 1\" [value] = \"item.id\">{{item[selectName]}}</option>\n      </select>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of sheet.getValue(field)\"\n        [ngClass]=\"{red: isMarkedForDelete[item]}\"\n        (click)=\"onItemSelect(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.name}}\n      </button>\n  "
+                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"  (click)=\"addNewItem($event)\"><i class=\"add icon\"></i></button>\n      <select class=\"ui dropdown\" [(ngModel)]=\"selectedItem\" (ngModelChange)=\"onNewItemSelect($event)\" >\n        <option *ngFor=\"let item of getItems([Status.Available])\"  [ngValue] = \"item.entity.id\">{{item.entity[selectName]}}</option>\n      </select>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of getItems([Status.Add, Status.Keep, Status.Delete])\"\n        [ngClass]=\"{green: item.status === Status.Add, red: item.status === Status.Delete}\"\n        (click)=\"onItemClick(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.entity.name}}\n      </button>\n  "
                 }),
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], CollectionProperty);
