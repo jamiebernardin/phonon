@@ -131,6 +131,32 @@ module.exports.bootstrap = function (cb) {
             });
         }
     );
+    var tickets = [
+        {
+            name: 'holodeck fire',
+            description: 'we are screwed',
+            assignee: 1,
+            priority: 1,
+            status: 1
+        },
+        {
+            name: 'clingons approaching',
+            description: "holy shit",
+            assignee: 1,
+            priority: 1,
+            status: 1
+        }
+    ];
+    tickets.forEach(function (ts) {
+            Ticket.create(ts).exec(function (err, thing) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('ticket: ' + thing.name + ' created.')
+                }
+            });
+        }
+    );
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
     cb();

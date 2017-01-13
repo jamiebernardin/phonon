@@ -94,7 +94,7 @@ module.exports = {
                 });
                 colStr = colStr.slice(0,colStr.length-1);
             }
-            content = content.replace('POPULATE_COLLECTIONS', colStr);
+            content = content.replace(new RegExp('POPULATE_COLLECTIONS', 'g'), colStr);
             require('fs').writeFileSync(outFile, content, 'utf8');
         });
     },
@@ -147,6 +147,7 @@ module.exports = {
             var searchStr = '    //ROUTES_START';
             // 'get /foo' : 'FooController.get'
             var replaceStr = searchStr + '\n    \'get /' +name+'\' : \'' + Name + 'Controller.get\',';
+            replaceStr += '\n    \'put /' +name+'/associations/:id\' : \'' + Name + 'Controller.put\',';
             content = content.replace(searchStr, replaceStr);
         });
         var outFile = '../config/routes.js';

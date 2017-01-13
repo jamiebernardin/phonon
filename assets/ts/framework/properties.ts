@@ -1,7 +1,7 @@
 /**
  * Created by jbernardin on 4/14/16.
  */
-import {PropertySheet} from './property.sheet'
+import {PropertySheet, Status, EntityWrapper} from './property.sheet'
 import {ElementRef, Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core'
 import {EntityService} from './entity.service'
 import * as _ from 'lodash'
@@ -25,6 +25,9 @@ export class BaseProperty<T> implements OnChanges, OnInit {
     }
     ngOnChanges(changes: SimpleChanges) {
 
+    }
+    public getAssociationChanges() : EntityWrapper[] {
+        return null;
     }
 }
 
@@ -189,21 +192,10 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
     }
 }
 
-export enum Status {
-    Delete,
-    Add,
-    Keep,
-    Available
-}
 
-export class EntityWrapper {
-    public entity: any;
-    public status: Status;
-    constructor( entity: any, status: Status ) {
-        this.entity = entity; this.status = status;
-    }
-}
-
+//<select class="ui dropdown"  (change)="onSelect($event.target.value)" >
+//<option *ngFor="let item of getAvailableItems()"  [selected]="item.id === newItemId" [value] = "item.entity.id">{{item.entity[selectName]}}</option>
+//</select>
 
 @Component({
     selector: 'collection-property',
@@ -211,13 +203,13 @@ export class EntityWrapper {
     template: `
       <div *ngIf="edit">
       <button class="small ui basic button"  (click)="addNewItem($event)"><i class="add icon"></i></button>
-      <select class="ui dropdown" [(ngModel)]="selectedItem" (ngModelChange)="onNewItemSelect($event)" >
-        <option *ngFor="let item of getItems([Status.Available])"  [ngValue] = "item.entity.id">{{item.entity[selectName]}}</option>
+      <select class="ui dropdown"  [(ngModel)]="selectedItem" >
+        <option *ngFor="let item of filter([Status.Available])"   [ngValue] = "item">{{item.entity[selectName]}}</option>
       </select>
       </div>
       <p *ngIf="edit"></p>
       <button class="medium ui basic button"
-        *ngFor="let item of getItems([Status.Add, Status.Keep, Status.Delete])"
+        *ngFor="let item of filter([Status.Add, Status.Keep, Status.Delete])"
         [ngClass]="{green: item.status === Status.Add, red: item.status === Status.Delete}"
         (click)="onItemClick(item)">
         <i *ngIf="edit" class="remove icon"></i>{{item.entity.name}}
@@ -229,11 +221,14 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
     private collection: string;
     items: any[] = [];
     selectName: string;
-    newItemId: Number;
     selectedItem: EntityWrapper;
+    defaultItem: EntityWrapper;
     public Status = Status;
     constructor(private elementRef: ElementRef, private _entityService: EntityService) {
         super();
+    }
+    filter(stati: Status[]) {
+        return EntityWrapper.filter(this.items, stati);
     }
     cancel() {
         var that = this;
@@ -248,6 +243,11 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
     }
     ngOnInit() {
         super.ngOnInit();
+        let entity = {id:-1};
+        entity[this.selectName] = "select a " + this.collection;
+        this.defaultItem = new EntityWrapper(entity, Status.Available);
+        this.items.push(this.defaultItem);
+        this.selectedItem = this.defaultItem;
         let existingItems = this.sheet.getValue(this.field);
         let that = this;
         if (existingItems != undefined) {
@@ -268,23 +268,6 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
                         }
                     }
                 });
-        if (isAvailable) {
-            this.newItemId = this.getItems([Status.Available])[0].entity.id;
-        }
-    }
-    // OR operation
-    getItems(stati: Status[]) : EntityWrapper[] {
-        let that = this;
-        let items =  _.filter(that.items, item => {
-            let retVal = false;
-            for (let status of stati) {
-                if (typeof item.status !== 'undefined' && item.status === status) {
-                    retVal = true;
-                }
-            }
-            return retVal;
-        });
-        return (typeof items !== 'undefined') ? items: [];;
     }
     onItemClick(item) {
         if (!this.edit) {
@@ -299,22 +282,11 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
             }
         }
     }
-    onNewItemSelect(item) {
-        console.log('on new item selected:');
-        console.log(item);
-        this.selectedItem = item;
-    }
     addNewItem(event) {
-        let that = this;
-        let itemToAdd = _.find(this.items, function(i) {
-            return i.entity.id == that.newItemId;
-        });
-        if (itemToAdd !== undefined) {
-            itemToAdd.status = Status.Add;
+        if (this.selectedItem.entity.id != -1) {
+            this.selectedItem.status = Status.Add
         }
-        if (this.getItems([Status.Available]).length > 0) {
-            this.newItemId = this.getItems([Status.Available])[0].entity.id;
-        }
+        this.selectedItem = this.defaultItem;
     }
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);
@@ -323,6 +295,24 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
                 this.cancel();
             }
         }
+    }
+    getAssociationChanges() : any {
+        let changes = {};
+        let toAdd = [];
+        let toRemove = [];
+        for (let addChange of EntityWrapper.filter(this.items,[Status.Add])) {
+            toAdd.push(addChange.entity.id);
+        }
+        for (let removeChange of EntityWrapper.filter(this.items,[Status.Delete])) {
+            toRemove.push(removeChange.entity.id);
+        }
+        if (toAdd.length > 0) {
+            changes['add'] = toAdd;
+        }
+        if (toRemove.length > 0) {
+            changes['remove'] = toRemove;
+        }
+        return changes;
     }
 }
 

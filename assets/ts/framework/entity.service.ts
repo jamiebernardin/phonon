@@ -66,6 +66,10 @@ export class EntityService {
         let url = path;
         return this._http.post(url, JSON.stringify(obj), this._loginService.getRequestOptions());
     }
+    addRemoveAssociations(path: string, id: string, changes: any) {
+        let url = path + '/associations/' +  id;
+        return this._http.put(url, JSON.stringify(changes), this._loginService.getRequestOptions());
+    }
 }
 
 

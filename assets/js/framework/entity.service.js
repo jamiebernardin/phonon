@@ -75,6 +75,10 @@ System.register(["@angular/core", "@angular/http", "rxjs/Rx", "./login.service"]
                     var url = path;
                     return this._http.post(url, JSON.stringify(obj), this._loginService.getRequestOptions());
                 };
+                EntityService.prototype.addRemoveAssociations = function (path, id, changes) {
+                    var url = path + '/associations/' + id;
+                    return this._http.put(url, JSON.stringify(changes), this._loginService.getRequestOptions());
+                };
                 return EntityService;
             }());
             EntityService = __decorate([

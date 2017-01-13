@@ -1,10 +1,44 @@
-System.register([], function (exports_1, context_1) {
+System.register(["lodash"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var PropertySheet;
+    var _, Status, EntityWrapper, PropertySheet;
     return {
-        setters: [],
+        setters: [
+            function (_1) {
+                _ = _1;
+            }
+        ],
         execute: function () {
+            // for associated entities
+            (function (Status) {
+                Status[Status["Delete"] = 0] = "Delete";
+                Status[Status["Add"] = 1] = "Add";
+                Status[Status["Keep"] = 2] = "Keep";
+                Status[Status["Available"] = 3] = "Available";
+            })(Status || (Status = {}));
+            exports_1("Status", Status);
+            EntityWrapper = (function () {
+                function EntityWrapper(entity, status) {
+                    this.entity = entity;
+                    this.status = status;
+                }
+                EntityWrapper.filter = function (items, stati) {
+                    var newItems = _.filter(items, function (item) {
+                        var retVal = false;
+                        for (var _i = 0, stati_1 = stati; _i < stati_1.length; _i++) {
+                            var status_1 = stati_1[_i];
+                            if (typeof item.status !== 'undefined' && item.status === status_1) {
+                                retVal = true;
+                            }
+                        }
+                        return retVal;
+                    });
+                    return (typeof newItems !== 'undefined') ? newItems : [];
+                };
+                return EntityWrapper;
+            }());
+            exports_1("EntityWrapper", EntityWrapper);
+            //  end associated entities
             PropertySheet = (function () {
                 function PropertySheet(entity) {
                     this.properties = [];
@@ -38,6 +72,17 @@ System.register([], function (exports_1, context_1) {
                         }
                     }
                     return vals;
+                };
+                PropertySheet.prototype.getAssociationChanges = function () {
+                    var vals = {};
+                    for (var _i = 0, _a = this.properties; _i < _a.length; _i++) {
+                        var prop = _a[_i];
+                        var changes = prop.getAssociationChanges();
+                        if (changes != null) {
+                            vals[prop.field] = changes;
+                        }
+                    }
+                    return { changes: vals };
                 };
                 return PropertySheet;
             }());

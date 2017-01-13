@@ -2,6 +2,7 @@ import {Component, OnInit, Injectable} from '@angular/core'
 import {Router} from '@angular/router'
 import {Entity, EntityService, EntityPath} from './entity.service'
 import {PropertySheet} from './property.sheet'
+import * as _ from 'lodash'
 
 declare var jQuery: any;
 
@@ -81,30 +82,35 @@ export class BaseDetailComponent implements OnInit, EntityPath {
         RouteSupport.get().putParam('searchStr', '');
         this.router.navigate( [item.path+'-detail'] );
     }
-    addRemoveItems() {
-
-    }
     save() {
         let changes = this.sheet.getChangedValues();
         if (Object.getOwnPropertyNames(changes).length !== 0) {
             if (this.create) {
                 this.entityService.create(this.getPath(), changes).subscribe(
                         res => {
-                            this.edit = false;
-                            this.sheet.setEntity(res.json());
-                            this.create = false;
+                        this.edit = false;
+                        this.sheet.setEntity(res.json());
+                        this.create = false;
                     })
             }
             else {
                 this.entityService.save(this.getPath(), this.sheet.getValue('id'), changes).subscribe(
-                    res => {
+                        res => {
                         this.sheet.setEntity(res.json());
                         this.edit = false;
-                })
+                    })
             }
         } else {
             this.edit = false;
         }
+        changes = this.sheet.getAssociationChanges();
+            if (!_.isEmpty(changes)) {
+                this.entityService.addRemoveAssociations(this.getPath(), this.sheet.getValue('id'), changes).subscribe(
+                        res => {
+                        this.sheet.setEntity(res.json().entity);
+                        this.edit = false;
+                    });
+            }
     }
 }
 

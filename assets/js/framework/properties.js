@@ -1,4 +1,4 @@
-System.register(["@angular/core", "./entity.service", "lodash"], function (exports_1, context_1) {
+System.register(["./property.sheet", "@angular/core", "./entity.service", "lodash"], function (exports_1, context_1) {
     "use strict";
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -15,9 +15,12 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var __moduleName = context_1 && context_1.id;
-    var core_1, entity_service_1, _, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, Status, EntityWrapper, CollectionProperty;
+    var property_sheet_1, core_1, entity_service_1, _, BaseProperty, BooleanProperty, IntegerProperty, StringProperty, TextProperty, DateTimeProperty, SelectProperty, CollectionProperty;
     return {
         setters: [
+            function (property_sheet_1_1) {
+                property_sheet_1 = property_sheet_1_1;
+            },
             function (core_1_1) {
                 core_1 = core_1_1;
             },
@@ -40,6 +43,9 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                     this.sheet.addProperty(this);
                 };
                 BaseProperty.prototype.ngOnChanges = function (changes) {
+                };
+                BaseProperty.prototype.getAssociationChanges = function () {
+                    return null;
                 };
                 return BaseProperty;
             }());
@@ -194,21 +200,6 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], SelectProperty);
             exports_1("SelectProperty", SelectProperty);
-            (function (Status) {
-                Status[Status["Delete"] = 0] = "Delete";
-                Status[Status["Add"] = 1] = "Add";
-                Status[Status["Keep"] = 2] = "Keep";
-                Status[Status["Available"] = 3] = "Available";
-            })(Status || (Status = {}));
-            exports_1("Status", Status);
-            EntityWrapper = (function () {
-                function EntityWrapper(entity, status) {
-                    this.entity = entity;
-                    this.status = status;
-                }
-                return EntityWrapper;
-            }());
-            exports_1("EntityWrapper", EntityWrapper);
             CollectionProperty = (function (_super) {
                 __extends(CollectionProperty, _super);
                 function CollectionProperty(elementRef, _entityService) {
@@ -217,29 +208,37 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                     _this._entityService = _entityService;
                     _this.routeItemOutlet = new core_1.EventEmitter();
                     _this.items = [];
-                    _this.Status = Status;
+                    _this.Status = property_sheet_1.Status;
                     return _this;
                 }
+                CollectionProperty.prototype.filter = function (stati) {
+                    return property_sheet_1.EntityWrapper.filter(this.items, stati);
+                };
                 CollectionProperty.prototype.cancel = function () {
                     var that = this;
                     this.items = _.map(that.items, function (item) {
-                        if (item.status == Status.Delete) {
-                            item.status = Status.Keep;
+                        if (item.status == property_sheet_1.Status.Delete) {
+                            item.status = property_sheet_1.Status.Keep;
                         }
-                        else if (item.status == Status.Add) {
-                            item.status = Status.Available;
+                        else if (item.status == property_sheet_1.Status.Add) {
+                            item.status = property_sheet_1.Status.Available;
                         }
                         return item;
                     });
                 };
                 CollectionProperty.prototype.ngOnInit = function () {
                     _super.prototype.ngOnInit.call(this);
+                    var entity = { id: -1 };
+                    entity[this.selectName] = "select a " + this.collection;
+                    this.defaultItem = new property_sheet_1.EntityWrapper(entity, property_sheet_1.Status.Available);
+                    this.items.push(this.defaultItem);
+                    this.selectedItem = this.defaultItem;
                     var existingItems = this.sheet.getValue(this.field);
                     var that = this;
                     if (existingItems != undefined) {
                         for (var _i = 0, existingItems_1 = existingItems; _i < existingItems_1.length; _i++) {
                             var item = existingItems_1[_i];
-                            that.items.push(new EntityWrapper(item, Status.Keep));
+                            that.items.push(new property_sheet_1.EntityWrapper(item, property_sheet_1.Status.Keep));
                         }
                     }
                     var itemsUrl = this.collection + '/items';
@@ -250,7 +249,7 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                                 return item.id === i.entity.id;
                             }) < 0);
                             if (isAvailable) {
-                                that.items.push(new EntityWrapper(item, Status.Available));
+                                that.items.push(new property_sheet_1.EntityWrapper(item, property_sheet_1.Status.Available));
                             }
                         };
                         for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
@@ -258,58 +257,28 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                             _loop_1(item);
                         }
                     });
-                    if (isAvailable) {
-                        this.newItemId = this.getItems([Status.Available])[0].entity.id;
-                    }
-                };
-                // OR operation
-                CollectionProperty.prototype.getItems = function (stati) {
-                    var that = this;
-                    var items = _.filter(that.items, function (item) {
-                        var retVal = false;
-                        for (var _i = 0, stati_1 = stati; _i < stati_1.length; _i++) {
-                            var status_1 = stati_1[_i];
-                            if (typeof item.status !== 'undefined' && item.status === status_1) {
-                                retVal = true;
-                            }
-                        }
-                        return retVal;
-                    });
-                    return (typeof items !== 'undefined') ? items : [];
-                    ;
                 };
                 CollectionProperty.prototype.onItemClick = function (item) {
                     if (!this.edit) {
                         this.routeItemOutlet.emit({ obj: item.entity, path: this.collection });
                     }
                     else {
-                        if (item.status == Status.Keep) {
-                            item.status = Status.Delete;
+                        if (item.status == property_sheet_1.Status.Keep) {
+                            item.status = property_sheet_1.Status.Delete;
                         }
-                        else if (item.status == Status.Add) {
-                            item.status = Status.Available;
+                        else if (item.status == property_sheet_1.Status.Add) {
+                            item.status = property_sheet_1.Status.Available;
                         }
-                        else if (item.status == Status.Delete) {
-                            item.status = Status.Keep;
+                        else if (item.status == property_sheet_1.Status.Delete) {
+                            item.status = property_sheet_1.Status.Keep;
                         }
                     }
-                };
-                CollectionProperty.prototype.onNewItemSelect = function (item) {
-                    console.log('on new item selected:');
-                    console.log(item);
-                    this.selectedItem = item;
                 };
                 CollectionProperty.prototype.addNewItem = function (event) {
-                    var that = this;
-                    var itemToAdd = _.find(this.items, function (i) {
-                        return i.entity.id == that.newItemId;
-                    });
-                    if (itemToAdd !== undefined) {
-                        itemToAdd.status = Status.Add;
+                    if (this.selectedItem.entity.id != -1) {
+                        this.selectedItem.status = property_sheet_1.Status.Add;
                     }
-                    if (this.getItems([Status.Available]).length > 0) {
-                        this.newItemId = this.getItems([Status.Available])[0].entity.id;
-                    }
+                    this.selectedItem = this.defaultItem;
                 };
                 CollectionProperty.prototype.ngOnChanges = function (changes) {
                     _super.prototype.ngOnChanges.call(this, changes);
@@ -318,6 +287,26 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                             this.cancel();
                         }
                     }
+                };
+                CollectionProperty.prototype.getAssociationChanges = function () {
+                    var changes = {};
+                    var toAdd = [];
+                    var toRemove = [];
+                    for (var _i = 0, _a = property_sheet_1.EntityWrapper.filter(this.items, [property_sheet_1.Status.Add]); _i < _a.length; _i++) {
+                        var addChange = _a[_i];
+                        toAdd.push(addChange.entity.id);
+                    }
+                    for (var _b = 0, _c = property_sheet_1.EntityWrapper.filter(this.items, [property_sheet_1.Status.Delete]); _b < _c.length; _b++) {
+                        var removeChange = _c[_b];
+                        toRemove.push(removeChange.entity.id);
+                    }
+                    if (toAdd.length > 0) {
+                        changes['add'] = toAdd;
+                    }
+                    if (toRemove.length > 0) {
+                        changes['remove'] = toRemove;
+                    }
+                    return changes;
                 };
                 return CollectionProperty;
             }(BaseProperty));
@@ -329,7 +318,7 @@ System.register(["@angular/core", "./entity.service", "lodash"], function (expor
                 core_1.Component({
                     selector: 'collection-property',
                     inputs: ['field', 'displayName', 'sheet', 'edit', 'collection', 'selectName'],
-                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"  (click)=\"addNewItem($event)\"><i class=\"add icon\"></i></button>\n      <select class=\"ui dropdown\" [(ngModel)]=\"selectedItem\" (ngModelChange)=\"onNewItemSelect($event)\" >\n        <option *ngFor=\"let item of getItems([Status.Available])\"  [ngValue] = \"item.entity.id\">{{item.entity[selectName]}}</option>\n      </select>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of getItems([Status.Add, Status.Keep, Status.Delete])\"\n        [ngClass]=\"{green: item.status === Status.Add, red: item.status === Status.Delete}\"\n        (click)=\"onItemClick(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.entity.name}}\n      </button>\n  "
+                    template: "\n      <div *ngIf=\"edit\">\n      <button class=\"small ui basic button\"  (click)=\"addNewItem($event)\"><i class=\"add icon\"></i></button>\n      <select class=\"ui dropdown\"  [(ngModel)]=\"selectedItem\" >\n        <option *ngFor=\"let item of filter([Status.Available])\"   [ngValue] = \"item\">{{item.entity[selectName]}}</option>\n      </select>\n      </div>\n      <p *ngIf=\"edit\"></p>\n      <button class=\"medium ui basic button\"\n        *ngFor=\"let item of filter([Status.Add, Status.Keep, Status.Delete])\"\n        [ngClass]=\"{green: item.status === Status.Add, red: item.status === Status.Delete}\"\n        (click)=\"onItemClick(item)\">\n        <i *ngIf=\"edit\" class=\"remove icon\"></i>{{item.entity.name}}\n      </button>\n  "
                 }),
                 __metadata("design:paramtypes", [core_1.ElementRef, entity_service_1.EntityService])
             ], CollectionProperty);

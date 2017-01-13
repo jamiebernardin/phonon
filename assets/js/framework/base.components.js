@@ -1,11 +1,14 @@
-System.register(["./property.sheet"], function (exports_1, context_1) {
+System.register(["./property.sheet", "lodash"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var property_sheet_1, RouteSupport, BaseRowComponent, BaseDetailComponent, BaseSearchComponent;
+    var property_sheet_1, _, RouteSupport, BaseRowComponent, BaseDetailComponent, BaseSearchComponent;
     return {
         setters: [
             function (property_sheet_1_1) {
                 property_sheet_1 = property_sheet_1_1;
+            },
+            function (_1) {
+                _ = _1;
             }
         ],
         execute: function () {
@@ -81,8 +84,6 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                     RouteSupport.get().putParam('searchStr', '');
                     this.router.navigate([item.path + '-detail']);
                 };
-                BaseDetailComponent.prototype.addRemoveItems = function () {
-                };
                 BaseDetailComponent.prototype.save = function () {
                     var _this = this;
                     var changes = this.sheet.getChangedValues();
@@ -103,6 +104,13 @@ System.register(["./property.sheet"], function (exports_1, context_1) {
                     }
                     else {
                         this.edit = false;
+                    }
+                    changes = this.sheet.getAssociationChanges();
+                    if (!_.isEmpty(changes)) {
+                        this.entityService.addRemoveAssociations(this.getPath(), this.sheet.getValue('id'), changes).subscribe(function (res) {
+                            _this.sheet.setEntity(res.json().entity);
+                            _this.edit = false;
+                        });
                     }
                 };
                 return BaseDetailComponent;
