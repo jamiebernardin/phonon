@@ -56,6 +56,9 @@ System.register(["lodash"], function (exports_1, context_1) {
                 };
                 PropertySheet.prototype.setEntity = function (entity) {
                     this.entity = entity;
+                    //for (let prop of this.properties) {
+                    //    prop.ngOnInit();
+                    //}
                 };
                 PropertySheet.prototype.addProperty = function (prop) {
                     this.properties.push(prop);
@@ -82,7 +85,7 @@ System.register(["lodash"], function (exports_1, context_1) {
                             vals[prop.field] = changes;
                         }
                     }
-                    return { changes: vals };
+                    return _.isEmpty(vals) ? null : { changes: vals };
                 };
                 return PropertySheet;
             }());

@@ -278,10 +278,13 @@ System.register(["./property.sheet", "@angular/core", "./entity.service", "lodas
                     if (this.selectedItem.entity.id != -1) {
                         this.selectedItem.status = property_sheet_1.Status.Add;
                     }
-                    this.selectedItem = this.defaultItem;
+                    this.selectedItem = this.items[0];
+                    console.log('this should have worked in dropdown');
+                    jQuery('.ui.dropdown').dropdown();
                 };
                 CollectionProperty.prototype.ngOnChanges = function (changes) {
                     _super.prototype.ngOnChanges.call(this, changes);
+                    console.log('ngOnChanges');
                     if (typeof changes['edit'] !== 'undefined') {
                         if (!changes['edit'].currentValue) {
                             this.cancel();
@@ -306,7 +309,21 @@ System.register(["./property.sheet", "@angular/core", "./entity.service", "lodas
                     if (toRemove.length > 0) {
                         changes['remove'] = toRemove;
                     }
-                    return changes;
+                    this.saveAssociationChanges();
+                    return _.isEmpty(changes) ? null : changes;
+                };
+                // this is just a fudge... need to actually get confirmed changes, not onese attempted
+                CollectionProperty.prototype.saveAssociationChanges = function () {
+                    var that = this;
+                    this.items = _.map(that.items, function (item) {
+                        if (item.status == property_sheet_1.Status.Delete) {
+                            item.status = property_sheet_1.Status.Available;
+                        }
+                        else if (item.status == property_sheet_1.Status.Add) {
+                            item.status = property_sheet_1.Status.Keep;
+                        }
+                        return item;
+                    });
                 };
                 return CollectionProperty;
             }(BaseProperty));

@@ -90,14 +90,16 @@ System.register(["./property.sheet", "lodash"], function (exports_1, context_1) 
                     if (Object.getOwnPropertyNames(changes).length !== 0) {
                         if (this.create) {
                             this.entityService.create(this.getPath(), changes).subscribe(function (res) {
-                                _this.edit = false;
                                 _this.sheet.setEntity(res.json());
+                                _this.saveAssociations(_this);
+                                _this.edit = false;
                                 _this.create = false;
                             });
                         }
                         else {
                             this.entityService.save(this.getPath(), this.sheet.getValue('id'), changes).subscribe(function (res) {
                                 _this.sheet.setEntity(res.json());
+                                _this.saveAssociations(_this);
                                 _this.edit = false;
                             });
                         }
@@ -105,11 +107,13 @@ System.register(["./property.sheet", "lodash"], function (exports_1, context_1) 
                     else {
                         this.edit = false;
                     }
-                    changes = this.sheet.getAssociationChanges();
+                };
+                BaseDetailComponent.prototype.saveAssociations = function (that) {
+                    var changes = that.sheet.getAssociationChanges();
                     if (!_.isEmpty(changes)) {
-                        this.entityService.addRemoveAssociations(this.getPath(), this.sheet.getValue('id'), changes).subscribe(function (res) {
-                            _this.sheet.setEntity(res.json().entity);
-                            _this.edit = false;
+                        that.entityService.addRemoveAssociations(that.getPath(), that.sheet.getValue('id'), changes).subscribe(function (res) {
+                            that.sheet.setEntity(res.json().entity);
+                            that.edit = false;
                         });
                     }
                 };

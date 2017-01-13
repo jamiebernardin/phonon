@@ -26,7 +26,7 @@ export class BaseProperty<T> implements OnChanges, OnInit {
     ngOnChanges(changes: SimpleChanges) {
 
     }
-    public getAssociationChanges() : EntityWrapper[] {
+    public getAssociationChanges() : any {
         return null;
     }
 }
@@ -286,10 +286,13 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
         if (this.selectedItem.entity.id != -1) {
             this.selectedItem.status = Status.Add
         }
-        this.selectedItem = this.defaultItem;
+        this.selectedItem = this.items[0];
+        console.log('this should have worked in dropdown');
+        jQuery('.ui.dropdown').dropdown();
     }
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);
+        console.log('ngOnChanges');
         if (typeof changes['edit'] !== 'undefined') {
             if (!changes['edit'].currentValue) {
                 this.cancel();
@@ -312,7 +315,20 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
         if (toRemove.length > 0) {
             changes['remove'] = toRemove;
         }
-        return changes;
+        this.saveAssociationChanges();
+        return _.isEmpty(changes) ? null : changes;
+    }
+    // this is just a fudge... need to actually get confirmed changes, not onese attempted
+    saveAssociationChanges() {
+        var that = this;
+        this.items = _.map(that.items, function(item) {
+            if (item.status == Status.Delete) {
+                item.status = Status.Available;
+            } else if (item.status == Status.Add) {
+                item.status = Status.Keep;
+            }
+            return item;
+        });
     }
 }
 

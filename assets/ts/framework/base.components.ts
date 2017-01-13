@@ -88,29 +88,33 @@ export class BaseDetailComponent implements OnInit, EntityPath {
             if (this.create) {
                 this.entityService.create(this.getPath(), changes).subscribe(
                         res => {
-                        this.edit = false;
-                        this.sheet.setEntity(res.json());
-                        this.create = false;
+                            this.sheet.setEntity(res.json());
+                            this.saveAssociations(this);
+                            this.edit = false;
+                            this.create = false;
                     })
             }
             else {
                 this.entityService.save(this.getPath(), this.sheet.getValue('id'), changes).subscribe(
                         res => {
-                        this.sheet.setEntity(res.json());
-                        this.edit = false;
+                            this.sheet.setEntity(res.json());
+                            this.saveAssociations(this);
+                            this.edit = false;
                     })
             }
         } else {
             this.edit = false;
         }
-        changes = this.sheet.getAssociationChanges();
-            if (!_.isEmpty(changes)) {
-                this.entityService.addRemoveAssociations(this.getPath(), this.sheet.getValue('id'), changes).subscribe(
-                        res => {
-                        this.sheet.setEntity(res.json().entity);
-                        this.edit = false;
-                    });
-            }
+    }
+    saveAssociations(that) {
+        let changes = that.sheet.getAssociationChanges();
+        if (!_.isEmpty(changes)) {
+            that.entityService.addRemoveAssociations(that.getPath(), that.sheet.getValue('id'), changes).subscribe(
+                    res => {
+                    that.sheet.setEntity(res.json().entity);
+                    that.edit = false;
+                });
+        }
     }
 }
 

@@ -50,6 +50,9 @@ export class PropertySheet {
     }
     setEntity(entity: any) {
         this.entity = entity;
+        //for (let prop of this.properties) {
+        //    prop.ngOnInit();
+        //}
     }
     addProperty(prop: BaseProperty<any>) {
         this.properties.push(prop);
@@ -74,6 +77,6 @@ export class PropertySheet {
                 vals[prop.field] = changes;
             }
         }
-        return {changes:vals};
+        return _.isEmpty(vals) ? null: {changes:vals};
     }
 }
