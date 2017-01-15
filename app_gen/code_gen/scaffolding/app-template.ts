@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import {RouterModule, Router, Routes, CanActivate} from '@angular/router';
 import {Location, LocationStrategy, HashLocationStrategy, APP_BASE_HREF} from '@angular/common';
 import {Observable} from 'rxjs/Rx';
-import 'rxjs/add/Observable/empty';
+import 'rxjs/add/observable/empty';
 import {BaseProperty, StringProperty, BooleanProperty, DateTimeProperty, TextProperty,
     IntegerProperty, SelectProperty, CollectionProperty}  from './framework/properties'
 import {LoginComponent} from './components/login'

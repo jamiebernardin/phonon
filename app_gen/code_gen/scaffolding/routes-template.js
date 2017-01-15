@@ -4,6 +4,5 @@
 
 module.exports.routes = {
     //ROUTES_START
-    //'get /foo' : 'FooController.get'
     //ROUTES_END
 }

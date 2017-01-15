@@ -14,11 +14,7 @@
   "compileOnSave": true,
   "files": [
     "node_modules/typescript/lib/lib.es6.d.ts",
-    "assets/ts/app.ts",
-    "assets/ts/framework/properties.ts",
-    "assets/ts/framework/property.sheet.ts",
-    "assets/ts/framework/base.components.ts",
-    "assets/ts/framework/entity.service.ts"
+    "assets/ts/app.ts"
   ],
   "exclude": [
     "node_modules"

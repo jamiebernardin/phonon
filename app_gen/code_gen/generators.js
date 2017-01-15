@@ -1,13 +1,12 @@
+var fs = require('fs');
 
 module.exports = {
-    component: function(models) {
+    component: function(models, templateFile, outDir) {
         var that = this;
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
-            var outFile = '../assets/ts/components/' + name + '.ts';
-            var utils = require('./scaffolding/utils');
-            var compTemplate = './scaffolding/component-template.ts';
-            var content = require('fs').readFileSync(compTemplate, 'utf8');
+            var outFile = outDir + name + '.ts';
+            var content = fs.readFileSync(templateFile, 'utf8');
             content = content.replace(new RegExp('_ComponentName_', 'g'), Name);
             content = content.replace(new RegExp('_componentName_', 'g'), name);
             content = content.replace(new RegExp('ROW_DETAIL', 'g'), that.generateDetail(model.rowDetailFields));
@@ -15,16 +14,14 @@ module.exports = {
             require('fs').writeFileSync(outFile, content, 'utf8');
         });
     },
-    detail: function(models) {
+    detail: function(models, templateFile, modelDir, outDir) {
         var that = this;
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
-            var outFile = '../assets/templates/' + name + '-detail.html';
-            var apiModel = require('../api/models/' + Name).attributes;
+            var outFile = outDir + name + '-detail.html';
+            var apiModel = require(modelDir + Name).attributes;
             var collections = [];
-            var utils = require('./scaffolding/utils');
-            var menuFile = './scaffolding/detail-menu.html';
-            var content = require('fs').readFileSync(menuFile);
+            var content = fs.readFileSync(templateFile);
             content += "<div class='ui three column doubling stackable grid'>\n";
             var field, displayName, type, schemaModel;
             for (field in apiModel) {
@@ -75,13 +72,11 @@ module.exports = {
             require('fs').writeFileSync(outFile, content);
         });
     },
-    controller: function(models) {
-        var compTemplate = './scaffolding/controller-template.js';
+    controller: function(models, templateFile, outDir) {
         models.forEach(function(model) {
             var Name = model.name, searchField = model.searchField;
-            var outFile = '../api/controllers/'+Name + 'Controller.js';
-            var utils = require('./scaffolding/utils');
-            var content = require('fs').readFileSync(compTemplate, 'utf8');
+            var outFile = outDir + Name + 'Controller.js';
+            var content = fs.readFileSync(templateFile, 'utf8');
             content = content.replace(new RegExp('MODEL_NAME', 'g'), Name);
             content = content.replace('SEARCH_FIELD', searchField);
             content = content.replace('DISPLAY_FIELD', model.displayField);
@@ -98,9 +93,8 @@ module.exports = {
             require('fs').writeFileSync(outFile, content, 'utf8');
         });
     },
-    appModule: function(models) {
-        var compTemplate = './scaffolding/app-template.ts';
-        var content = require('fs').readFileSync(compTemplate, 'utf8');
+    appModule: function(models, templateFile, outFile) {
+        var content = fs.readFileSync(templateFile, 'utf8');
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
             // imports
@@ -121,13 +115,11 @@ module.exports = {
         });
         var searchStr = 'FIRST_MODEL';
         content = content.replace(new RegExp(searchStr, 'g'), models[0].name.toLowerCase());
-        var outFile = '../assets/ts/app.ts';
         require('fs').writeFileSync(outFile, content, 'utf8');
     },
-    appMenu: function(models) {
+    appMenu: function(models, templateFile, outFile) {
         var that = this;
-        var compTemplate = './scaffolding/app.component-template.html';
-        var content = require('fs').readFileSync(compTemplate, 'utf8');
+        var content = fs.readFileSync(templateFile, 'utf8');
         models.reverse().forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
             var searchStr = '        <!--MENU_BEGIN-->';
@@ -136,29 +128,18 @@ module.exports = {
             content = content.replace(searchStr, replaceStr);
         });
         models.reverse();
-        var outFile = '../assets/templates/app.component.html';
         require('fs').writeFileSync(outFile, content, 'utf8');
     },
-    controllerRoutes: function(models) {
-        var routesTemplate = './scaffolding/routes-template.js';
-        var content = require('fs').readFileSync(routesTemplate, 'utf8');
+    controllerRoutes: function(models, templateFile, outFile) {
+        var content = fs.readFileSync(templateFile, 'utf8');
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
             var searchStr = '    //ROUTES_START';
-            // 'get /foo' : 'FooController.get'
             var replaceStr = searchStr + '\n    \'get /' +name+'\' : \'' + Name + 'Controller.get\',';
             replaceStr += '\n    \'put /' +name+'/associations/:id\' : \'' + Name + 'Controller.put\',';
             content = content.replace(searchStr, replaceStr);
         });
-        var outFile = '../config/routes.js';
-        require('fs').writeFileSync(outFile, content, 'utf8');
-    },
-    // private
-    displayName  : function (field) {
-        var camel = field.replace(/(\_[a-z])/g, function (item) {
-            return item.toUpperCase().replace('_', ' ');
-        });
-        return camel[0].toUpperCase() + camel.slice(1);
+        fs.writeFileSync(outFile, content, 'utf8');
     },
     generateDetail : function (fields) {
         var content = '';
@@ -171,5 +152,36 @@ module.exports = {
             content += '      </div>\n';
         });
         return content;
+    },
+    copyModels: function (models, sourceDir, targetDir) {
+        models.forEach(function(model) {
+            var filename = model.name + '.js';
+            var sourceFile = sourceDir + filename;
+            var targetFile = targetDir + filename;
+            fs.writeFileSync(targetFile, fs.readFileSync(sourceFile));
+        });
+    },
+    bootstrap: function(initData, templateFile, targetFile ) {
+        var content = fs.readFileSync(templateFile, 'utf8');
+        var searchStr = '    //INIT_DATA_START';
+        for (var table in initData) {
+            if (initData.hasOwnProperty(table)) {
+                var replaceStr = searchStr + '\n';
+                replaceStr += JSON.stringify(initData[table], null, '\t') + '\n    .forEach(function (ts) {\n        ';
+                replaceStr += table + '.create(ts).exec(function (err, thing) {\n';
+                replaceStr += '            if (err) { console.log(err); } else {\n';
+                replaceStr += '                console.log(\'' + table + ': \' + thing.name + \' created.\')\n';
+                replaceStr += '            }\n        });\n    });\n\n';
+                content = content.replace(searchStr, replaceStr);
+            }
+        };
+        fs.writeFileSync(targetFile, content, 'utf8');
+    },
+    // private functions
+    displayName  : function (field) {
+        var camel = field.replace(/(\_[a-z])/g, function (item) {
+            return item.toUpperCase().replace('_', ' ');
+        });
+        return camel[0].toUpperCase() + camel.slice(1);
     }
 }
