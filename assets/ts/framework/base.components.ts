@@ -104,6 +104,7 @@ export class BaseDetailComponent implements OnInit, EntityPath {
             }
         } else {
             this.edit = false;
+            this.saveAssociations(this);
         }
     }
     saveAssociations(that) {
