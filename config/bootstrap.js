@@ -34,7 +34,6 @@ module.exports.bootstrap = function (cb) {
 
 
     //INIT_DATA_START
-
     //INIT_DATA_END
 
 

@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
     login(event) {
         this._loginService.login(event.email, event.password).subscribe(
             () => {
-                this.route('worker-search');
+                this.route('empty');
                 this.error = '';
             },
                 err => {
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     }
     logout() {
         this._loginService.logout();
-        this.route('Empty');
+        this.route('empty');
     }
     route(name: string) {
         if (this._loginService.isLoggedIn) {
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
     ngOnInit() {
         this._loginService.checkLoggedIn().
-            map(data => this._router.navigate(['empty'])).catch(err => Observable.empty()).subscribe();
+            map(data => this._router.navigate(['worker-search'])).catch(err => Observable.empty()).subscribe();
         Observable.timer(this.POLL_INTERVAL, this.POLL_INTERVAL).subscribe(t => {
             this._loginService.checkLoggedIn().catch(err => Observable.empty()).subscribe();
         });

@@ -113,7 +113,7 @@ module.exports = {
             replaceStr += Name + 'SearchComponent,';
             content = content.replace(searchStr, replaceStr);
         });
-        var searchStr = 'empty';
+        var searchStr = 'FIRST_MODEL';
         content = content.replace(new RegExp(searchStr, 'g'), models[0].name.toLowerCase());
         require('fs').writeFileSync(outFile, content, 'utf8');
     },

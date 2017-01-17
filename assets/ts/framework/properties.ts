@@ -204,7 +204,7 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
       <div *ngIf="edit">
       <button class="small ui basic button"  (click)="addNewItem($event)"><i class="add icon"></i></button>
       <select class="ui dropdown"  [(ngModel)]="selectedItem" >
-        <option *ngFor="let item of filter([Status.Available])" [ngValue] = "item">{{item.entity[selectName]}}</option>
+        <option *ngFor="let item of filter([Status.Available])" [selected]="selectedItem.entity.id == item.entity.id" [ngValue] = "item">{{item.entity[selectName]}}</option>
       </select>
       </div>
       <p *ngIf="edit"></p>
@@ -283,12 +283,14 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
         }
     }
     addNewItem(event) {
-        console.log(this.selectedItem.entity);
         if (this.selectedItem.entity.id != -1) {
             this.selectedItem.status = Status.Add
         }
         this.selectedItem = this.items[0];
-        console.log(this.selectedItem.entity);
+        // unfortunately needed to work to make semantic UI dropdown update selected item
+        setTimeout(() => {
+            jQuery('.ui.dropdown').dropdown();
+        }, 10);
     }
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);

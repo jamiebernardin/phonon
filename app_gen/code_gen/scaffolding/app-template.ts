@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     }
     logout() {
         this._loginService.logout();
-        this.route('Empty');
+        this.route('empty');
     }
     route(name: string) {
         if (this._loginService.isLoggedIn) {
