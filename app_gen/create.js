@@ -25,8 +25,7 @@ generators.appMenu(models, SCAFFOLDING_DIR + 'app.component-template.html', ROOT
 generators.appModule(models, SCAFFOLDING_DIR + 'app-template.ts', ROOT_DIR + 'assets/ts/app.ts');
 generators.component(models, SCAFFOLDING_DIR + 'component-template.ts', ROOT_DIR + 'assets/ts/components/');
 
-// we need to read the waterline model files from either bundle or products.  we are choosing latter as 3rd argument
-
+// we need to read the waterline model files from either bundle or products.  we are using api/models.
 generators.detail(models, SCAFFOLDING_DIR + 'detail-menu.html', ROOT_DIR + 'api/models/', ROOT_DIR + 'assets/templates/');
 generators.controllerRoutes(models, SCAFFOLDING_DIR + 'routes-template.js', ROOT_DIR + 'config/routes.js');
 generators.bootstrap(initData, SCAFFOLDING_DIR + 'bootstrap-template.js',  ROOT_DIR + 'config/bootstrap.js');

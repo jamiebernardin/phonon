@@ -204,7 +204,7 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
       <div *ngIf="edit">
       <button class="small ui basic button"  (click)="addNewItem($event)"><i class="add icon"></i></button>
       <select class="ui dropdown"  [(ngModel)]="selectedItem" >
-        <option *ngFor="let item of filter([Status.Available])"  [selected]="item.entity.id == selectedItem.entity.id"  [ngValue] = "item">{{item.entity[selectName]}}</option>
+        <option *ngFor="let item of filter([Status.Available])" [ngValue] = "item">{{item.entity[selectName]}}</option>
       </select>
       </div>
       <p *ngIf="edit"></p>
@@ -283,14 +283,15 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
         }
     }
     addNewItem(event) {
+        console.log(this.selectedItem.entity);
         if (this.selectedItem.entity.id != -1) {
             this.selectedItem.status = Status.Add
         }
         this.selectedItem = this.items[0];
+        console.log(this.selectedItem.entity);
     }
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);
-        console.log('ngOnChanges');
         if (typeof changes['edit'] !== 'undefined') {
             if (!changes['edit'].currentValue) {
                 this.cancel();
@@ -316,7 +317,7 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
         this.saveAssociationChanges();
         return _.isEmpty(changes) ? null : changes;
     }
-    // this is just a fudge... need to actually get confirmed changes, not onese attempted
+    // this is just a fudge... it assumes proposed changes were saved!!
     saveAssociationChanges() {
         var that = this;
         this.items = _.map(that.items, function(item) {
@@ -331,60 +332,5 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
 }
 
 
-
-//@Component({
-//    selector: 'subselect-property',
-//    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName', 'joinId', 'selectId'],
-//    template: `
-//       <h4 class="ui top attached header">
-//           {{ displayName }}
-//      </h4>
-//       <div *ngIf="!edit" class="ui attached segment">
-//           {{ getDisplayItem() }}
-//       </div>
-//        <div *ngIf="edit" class="ui attached segment">
-//        <select class="ui fluid search selection dropdown"  (change)="onSelect($event.target.value)">
-//            <option *ngFor="let item of items" [selected]="item.id === sheet.getValue(field)" [value] = "item.id">{{item[selectName]}}</option>
-//        </select>
-//        </div>
-//
-//  `
-//})
-//export class SubSelectProperty extends BaseProperty<Number> implements OnInit {
-//    items: any = [];
-//    itemsUrl: string;
-//    selectName: string;
-//    selectId: string;
-//    constructor(private elementRef: ElementRef, private _entityService: EntityService) {
-//        super();
-//        this.defaultValue = 1;
-//    }
-//    getDisplayItem() {
-//        var id = this.sheet.getValue(this.field);
-//        let result = this.items.filter(item => {
-//            return item.id === id
-//        });
-//        return (result.length > 0) ? result[0][this.selectName] : '';
-//    }
-//    onSelect(id: Number) {
-//        this.newValue = id;
-//    }
-//    updateSelectValue(id: number) {
-//        let that = this;
-//        while(this.items.length > 0) {
-//            this.items.pop();
-//        }
-//        this._entityService.getUrl(this.itemsUrl+'?selectId='+id).subscribe(
-//                items =>  Array.prototype.push.apply(that.items, items)
-//        );
-//    }
-//    ngOnInit() {
-//        super.ngOnInit();
-//        this.updateSelectValue(this.sheet.getValue(this.selectId));
-//        setTimeout(() => {
-//            jQuery('.ui.dropdown').dropdown();
-//        }, 10);
-//    }
-//}
 
 

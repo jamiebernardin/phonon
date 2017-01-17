@@ -1,0 +1,20 @@
+<!--text container-->
+<div class="ui secondary menu">
+    <div class="ui container">
+        <a class="item">
+            <!--<img class="ui small image" src="../images/osler.png">-->
+            <h2 class="ui item large grey label"><i>phonon</i></h2>
+        </a>
+        <!--MENU_BEGIN-->
+        <!--MENU_END-->
+        <div class="right menu">
+            <a *ngIf="_loginService.isLoggedIn" class="ui item" (click)="logout()">
+                Logout
+            </a>
+        </div>
+    </div>
+</div>
+<div class="ui container segment "> <!-- <--- Our app loads here! -->
+    <router-outlet></router-outlet>
+    <login-panel [error]="error" *ngIf="!_loginService.isLoggedIn" (loginSubmit)="login($event)"></login-panel>
+</div>

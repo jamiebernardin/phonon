@@ -7,7 +7,14 @@
 
 
 module.exports = {
-    items: require('./utils/queryTool').selectQuery('MODEL_NAME'.toLowerCase(), 'DISPLAY_FIELD'),
+    items: function(req, res) {
+        MODEL_NAME.find().exec(function(err, results){
+            var retVal = _.map(results, function(item) {
+                return {id: item.id, name: item.name}
+            });
+            return res.json(retVal);
+        });
+    },
     get: function (req, res) {
         var searchStr  = req.query.searchStr;
         var query = {limit:20};
