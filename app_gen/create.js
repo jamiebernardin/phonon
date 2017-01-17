@@ -2,7 +2,6 @@
 
 //  WARNING:  YOU MAY BE REPLACING EDITED FILES
 
-//  CONFIGURE
 
 var appBundle = 'gira'
 
