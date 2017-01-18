@@ -13,6 +13,8 @@ import {LoginComponent} from './components/login'
 import {EntityService} from './framework/entity.service'
 import {LoginService} from './framework/login.service'
 //BEGIN_MODEL_IMPORTS
+import {LanguageRowComponent, LanguageDetailComponent, LanguageSearchComponent} from './components/language'
+import {HelloRowComponent, HelloDetailComponent, HelloSearchComponent} from './components/hello'
 //END_MODEL_IMPORTS
 
 @Component({
@@ -22,6 +24,10 @@ export class EmptyPanel {}
 
 const routes: Routes = [
     //BEGIN_ROUTES
+    {path: 'language-detail', component: LanguageDetailComponent},
+    {path: 'language-search', component: LanguageSearchComponent},
+    {path: 'hello-detail', component: HelloDetailComponent},
+    {path: 'hello-search', component: HelloSearchComponent},
     //END_ROUTES
     {path: 'empty',  component: EmptyPanel}
 ];
@@ -39,7 +45,7 @@ export class AppComponent implements OnInit {
     login(event) {
         this._loginService.login(event.email, event.password).subscribe(
             () => {
-                this.route('empty');
+                this.route('hello-search');
                 this.error = '';
             },
                 err => {
@@ -61,7 +67,7 @@ export class AppComponent implements OnInit {
     }
     ngOnInit() {
         this._loginService.checkLoggedIn().
-            map(data => this._router.navigate(['worker-search'])).catch(err => Observable.empty()).subscribe();
+            map(data => this._router.navigate(['hello-search'])).catch(err => Observable.empty()).subscribe();
         Observable.timer(this.POLL_INTERVAL, this.POLL_INTERVAL).subscribe(t => {
             this._loginService.checkLoggedIn().catch(err => Observable.empty()).subscribe();
         });
@@ -71,6 +77,8 @@ export class AppComponent implements OnInit {
 @NgModule({
     declarations: [
         //BEGIN_MODEL_DECS
+        LanguageRowComponent, LanguageDetailComponent, LanguageSearchComponent,
+        HelloRowComponent, HelloDetailComponent, HelloSearchComponent,
         //END_MODEL_DECS
         AppComponent, EmptyPanel, StringProperty, BooleanProperty, SelectProperty,
         DateTimeProperty, TextProperty, IntegerProperty, LoginComponent, CollectionProperty

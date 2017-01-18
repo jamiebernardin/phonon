@@ -34,6 +34,55 @@ module.exports.bootstrap = function (cb) {
 
 
     //INIT_DATA_START
+[
+	{
+		"name": "English",
+		"description": "Did you know that 60% of English words come from French?"
+	},
+	{
+		"name": "Spanish",
+		"description": "Official language of 21 countries with 400M native speakers.  "
+	},
+	{
+		"name": "Unknown",
+		"description": "Need to search Wikipedia."
+	}
+]
+    .forEach(function (ts) {
+        Language.create(ts).exec(function (err, thing) {
+            if (err) { console.log(err); } else {
+                console.log('Language: ' + thing.name + ' created.')
+            }
+        });
+    });
+
+
+[
+	{
+		"greeting": "Ola!",
+		"description": "Informal greeting any time of day.",
+		"language": 1
+	},
+	{
+		"greeting": "Yo!",
+		"description": "Very informal greeting.",
+		"language": 2
+	},
+	{
+		"greeting": "Good evening.",
+		"description": "Formal greeting appropriate after 4pm.",
+		"language": 0
+	}
+]
+    .forEach(function (ts) {
+        Hello.create(ts).exec(function (err, thing) {
+            if (err) { console.log(err); } else {
+                console.log('Hello: ' + thing.name + ' created.')
+            }
+        });
+    });
+
+
     //INIT_DATA_END
 
 

@@ -2,8 +2,13 @@
 
 //  WARNING:  YOU MAY BE REPLACING EDITED FILES
 
+var args = process.argv.slice(2);
+if (args.length < 1) {
+    console.log('please specify the bundle name... e.g. \' node create gira \'');
+    process.exit(0);
+}
 
-var appBundle = 'gira'
+var appBundle = args[0];
 
 
 

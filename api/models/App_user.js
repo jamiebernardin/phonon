@@ -1,7 +1,7 @@
 /**
  * Created by jbernardin on 4/26/16.
  */
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 
 module.exports = {
 
