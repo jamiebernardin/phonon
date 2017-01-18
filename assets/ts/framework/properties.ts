@@ -29,6 +29,16 @@ export class BaseProperty<T> implements OnChanges, OnInit {
     public getAssociationChanges() : any {
         return null;
     }
+    // often we want the name of the field return with id in controller:items
+    displayProp(entity) {
+        let retVal = '';
+        for (let prop in entity) {
+            if (Object.hasOwnProperty(prop) && prop !== 'id') {
+                retVal = prop;
+            }
+        }
+        return retVal;
+    }
 }
 
 @Component({
@@ -136,7 +146,7 @@ export class DateTimeProperty extends BaseProperty<String>  {
 
 @Component({
     selector: 'select-property',
-    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl', 'selectName'],
+    inputs: ['field', 'displayName', 'sheet', 'edit', 'itemsUrl'],
     template: `
        <h4 class="ui top attached header">
            {{ displayName }}
@@ -184,7 +194,8 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
         this._entityService.getUrl(this.itemsUrl).subscribe(
             items =>  {
                 Array.prototype.push.apply(that.items, items);
-                if (typeof items[0] !== 'undefined') {
+                if (items.length > 0) {
+                    this.selectName = this.displayProp(items[0]);
                     that.onSelect(items[0].id);
                 }
             }
@@ -199,7 +210,7 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
 
 @Component({
     selector: 'collection-property',
-    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection', 'selectName'],
+    inputs: ['field', 'displayName', 'sheet', 'edit', 'collection'],
     template: `
       <div *ngIf="edit">
       <button class="small ui basic button"  (click)="addNewItem($event)"><i class="add icon"></i></button>
@@ -244,7 +255,6 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
     ngOnInit() {
         super.ngOnInit();
         let entity = {id:-1};
-        entity[this.selectName] = "select a " + this.collection;
         this.defaultItem = new EntityWrapper(entity, Status.Available);
         this.items.push(this.defaultItem);
         this.selectedItem = this.defaultItem;
@@ -259,6 +269,10 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
         let isAvailable:Boolean = false;
         this._entityService.getUrl(itemsUrl).subscribe(
                 items => {
+                    if (items.length > 0) {
+                        this.selectName = this.displayProp(items[0]);
+                        entity[this.selectName] = "select a " + this.collection;
+                    }
                     for (let item of items) {
                         isAvailable = (_.findIndex(that.items, i =>  {
                                 return item.id === i.entity.id;
@@ -331,6 +345,7 @@ export class CollectionProperty extends BaseProperty< any[] > implements OnInit,
             return item;
         });
     }
+
 }
 
 

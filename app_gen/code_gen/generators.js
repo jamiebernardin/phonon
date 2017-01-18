@@ -43,8 +43,7 @@ module.exports = {
                         content += "          [field]=\"'" + field + "'\"\n";
                         content += "          [displayName]=\"'" + that.displayName(field) + "'\"";
                         if (type === 'select') {
-                            content += "\n          [itemsUrl]=\"'" + schemaModel + "/items'\"\n";
-                            content += "          [selectName]=\"'" + model.displayField + "'\">\n";
+                            content += "\n          [itemsUrl]=\"'" + schemaModel + "/items'\">\n";
                         } else {
                             content += ">\n";
                         }
@@ -63,8 +62,7 @@ module.exports = {
                         content += "          (routeItemOutlet)=\"routeToItem($event)\"\n";
                         content += "          [edit]=\"edit\"\n";
                         content += "          [collection]=\"'" + fieldModel.collection + "'\"\n";
-                        content += "          [field]=\"'" + fieldModel.field + "'\"\n";
-                        content += "          [selectName]=\"" + "\'name\'" + "\">\n";
+                        content += "          [field]=\"'" + fieldModel.field + "'\">\n";
                         content += '       </collection-property>\n';
                         content += '   </div>\n';
                 })
