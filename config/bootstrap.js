@@ -36,22 +36,31 @@ module.exports.bootstrap = function (cb) {
     //INIT_DATA_START
 [
 	{
-		"name": "English",
-		"description": "Did you know that 60% of English words come from French?"
+		"name": "holodeck fire",
+		"description": "houston we have a problem",
+		"assignee": 1,
+		"priority": 1,
+		"status": 1
 	},
 	{
-		"name": "Spanish",
-		"description": "Official language of 21 countries with 400M native speakers.  "
+		"name": "clingons approaching",
+		"description": "bad news for sure",
+		"assignee": 2,
+		"priority": 2,
+		"status": 2
 	},
 	{
-		"name": "Unknown",
-		"description": "Need to search Wikipedia."
+		"name": "cargo bay was left open",
+		"description": "oh boy, not again",
+		"assignee": 3,
+		"priority": 3,
+		"status": 3
 	}
 ]
     .forEach(function (ts) {
-        Language.create(ts).exec(function (err, thing) {
+        Ticket.create(ts).exec(function (err, thing) {
             if (err) { console.log(err); } else {
-                console.log('Language: ' + thing.name + ' created.')
+                console.log('Ticket: ' + thing.name + ' created.')
             }
         });
     });
@@ -59,25 +68,99 @@ module.exports.bootstrap = function (cb) {
 
 [
 	{
-		"greeting": "Ola!",
-		"description": "Informal greeting any time of day.",
-		"language": 1
+		"name": "John Smith",
+		"skill": 3
 	},
 	{
-		"greeting": "Yo!",
-		"description": "Very informal greeting.",
-		"language": 2
+		"name": "Barry Bonds",
+		"skill": 1
 	},
 	{
-		"greeting": "Good evening.",
-		"description": "Formal greeting appropriate after 4pm.",
-		"language": 0
+		"name": "Liz Harris",
+		"skill": 2
 	}
 ]
     .forEach(function (ts) {
-        Hello.create(ts).exec(function (err, thing) {
+        Worker.create(ts).exec(function (err, thing) {
             if (err) { console.log(err); } else {
-                console.log('Hello: ' + thing.name + ' created.')
+                console.log('Worker: ' + thing.name + ' created.')
+            }
+        });
+    });
+
+
+[
+	{
+		"name": "Frontend",
+		"description": "JavaScript front end developer"
+	},
+	{
+		"name": "Backend python",
+		"description": "Python developer for backend."
+	},
+	{
+		"name": "Backend scala",
+		"description": "Scala developer for data processing."
+	},
+	{
+		"name": "Data engineer",
+		"description": "All around resource for sql, hdfs, and integration."
+	}
+]
+    .forEach(function (ts) {
+        Skill_type.create(ts).exec(function (err, thing) {
+            if (err) { console.log(err); } else {
+                console.log('Skill_type: ' + thing.name + ' created.')
+            }
+        });
+    });
+
+
+[
+	{
+		"name": "low",
+		"description": "Not a big priority."
+	},
+	{
+		"name": "medium",
+		"description": "This needs to get done."
+	},
+	{
+		"name": "high",
+		"description": "Sky is falling."
+	}
+]
+    .forEach(function (ts) {
+        Priority_type.create(ts).exec(function (err, thing) {
+            if (err) { console.log(err); } else {
+                console.log('Priority_type: ' + thing.name + ' created.')
+            }
+        });
+    });
+
+
+[
+	{
+		"name": "open",
+		"description": "Ticket not yet assigned"
+	},
+	{
+		"name": "assigned",
+		"description": "Ticket has been assigned, but is not being worked on."
+	},
+	{
+		"name": "in progress",
+		"description": "Ticket is assigned and is being worked on."
+	},
+	{
+		"name": "closed",
+		"description": "All work is completed and it's super!"
+	}
+]
+    .forEach(function (ts) {
+        Ticket_status.create(ts).exec(function (err, thing) {
+            if (err) { console.log(err); } else {
+                console.log('Ticket_status: ' + thing.name + ' created.')
             }
         });
     });

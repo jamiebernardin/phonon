@@ -6,8 +6,11 @@
             <h2 class="ui item large grey label"><i>phonon</i></h2>
         </a>
         <!--MENU_BEGIN-->
-       <a class="item" (click)="route('hello-search')">Hello</a>
-       <a class="item" (click)="route('language-search')">Language</a>
+       <a class="item" (click)="route('worker-search')">Worker</a>
+       <a class="item" (click)="route('ticket-search')">Ticket</a>
+       <a class="item" (click)="route('priority_type-search')">Priority Type</a>
+       <a class="item" (click)="route('ticket_status-search')">Ticket Status</a>
+       <a class="item" (click)="route('skill_type-search')">Skill Type</a>
         <!--MENU_END-->
         <div class="right menu">
             <a *ngIf="_loginService.isLoggedIn" class="ui item" (click)="logout()">
