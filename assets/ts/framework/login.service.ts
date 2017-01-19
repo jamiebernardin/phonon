@@ -3,7 +3,7 @@
  */
 import {Injectable} from '@angular/core';
 import {Http, Response, RequestOptions, Headers} from '@angular/http'
-import {Observable} from 'rxjs/rx'
+import {Observable} from 'rxjs/Rx'
 import 'rxjs/add/operator/map';
 
 

@@ -18,7 +18,7 @@ module.exports = {
         var that = this;
         models.forEach(function(model) {
             var Name = model.name, name = Name.toLowerCase();
-            var outFile = outDir + name + '-detail.html';
+            var outFile = outDir + Name + '-detail.html';
             var apiModel = require(modelDir + Name).attributes;
             var collections = [];
             var content = fs.readFileSync(templateFile);
