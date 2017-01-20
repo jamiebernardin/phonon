@@ -203,10 +203,7 @@ export class SelectProperty extends BaseProperty<Number> implements OnInit, OnCh
     }
 }
 
-
-//<select class="ui dropdown"  (change)="onSelect($event.target.value)" >
-//<option *ngFor="let item of getAvailableItems()"  [selected]="item.id === newItemId" [value] = "item.entity.id">{{item.entity[selectName]}}</option>
-//</select>
+// this component is for associations.
 
 @Component({
     selector: 'collection-property',

@@ -4,23 +4,8 @@ import {Entity, EntityService, EntityPath} from './entity.service'
 import {PropertySheet} from './property.sheet'
 import * as _ from 'lodash'
 
-declare var jQuery: any;
+declare var jQuery: any;  // for modal support
 
-export class RouteSupport {
-    putParam(name: string, val: any) {
-        this.data[name] = val;
-    }
-    takeParam(name: string) : any {
-        let retVal = this.data[name];
-        delete this.data[name];
-        return retVal;
-    }
-    private data = {};
-    private static instance: RouteSupport;
-    public static get() : RouteSupport {
-        return RouteSupport.instance||(RouteSupport.instance = new RouteSupport());
-    }
-}
 
 export class BaseRowComponent {
     entity: Entity;
@@ -157,6 +142,22 @@ export class BaseSearchComponent implements OnInit, EntityPath {
         if (this.searchStr !== null) {
             this.search();
         }
+    }
+}
+
+export class RouteSupport {
+    putParam(name: string, val: any) {
+        this.data[name] = val;
+    }
+    takeParam(name: string) : any {
+        let retVal = this.data[name];
+        delete this.data[name];
+        return retVal;
+    }
+    private data = {};
+    private static instance: RouteSupport;
+    public static get() : RouteSupport {
+        return RouteSupport.instance||(RouteSupport.instance = new RouteSupport());
     }
 }
 
