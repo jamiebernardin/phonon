@@ -162,13 +162,13 @@ module.exports = {
     bootstrap: function(initData, templateFile, targetFile ) {
         var content = fs.readFileSync(templateFile, 'utf8');
         var searchStr = '    //INIT_DATA_START';
-        for (var table in initData) {
-            if (initData.hasOwnProperty(table)) {
+        for (var entity in initData) {
+            if (initData.hasOwnProperty(entity)) {
                 var replaceStr = searchStr + '\n';
-                replaceStr += JSON.stringify(initData[table], null, '\t') + '\n    .forEach(function (ts) {\n        ';
-                replaceStr += table + '.create(ts).exec(function (err, thing) {\n';
+                replaceStr += JSON.stringify(initData[entity], null, '\t') + '\n    .forEach(function (ts) {\n        ';
+                replaceStr += entity + '.create(ts).exec(function (err, thing) {\n';
                 replaceStr += '            if (err) { console.log(err); } else {\n';
-                replaceStr += '                console.log(\'' + table + ': \' + thing.name + \' created.\')\n';
+                replaceStr += '                console.log(\'' + entity + ' object created.\')\n';
                 replaceStr += '            }\n        });\n    });\n\n';
                 content = content.replace(searchStr, replaceStr);
             }
