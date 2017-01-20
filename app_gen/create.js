@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-//  WARNING!!!  YOU MAY BE REPLACING EDITED FILES.  
+//  WARNING!!!  YOU MAY BE REPLACING EDITED FILES.
 
 var args = process.argv.slice(2);
 if (args.length < 1) {
